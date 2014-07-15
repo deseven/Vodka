@@ -31,6 +31,9 @@ switch ($page["name"]) {
 		break;
 	case "404":
 		$vodka->replaceVar("{WARN}","You shouldn't be there.");
+		break;
+	case "usage":
+		$vodka->appendHead('<script src="https://google-code-prettify.googlecode.com/svn/loader/run_prettify.js"></script>');
 }
 
 $vodka->buildCurrentPage(); // finally, we are ready to output our page

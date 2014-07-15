@@ -39,6 +39,7 @@ h2 {
 	border-bottom-right-radius: 10px;
 	box-sizing: border-box;
 	background-color: #eee;
+	margin-bottom:25px;
 }
 
 #menu {
@@ -113,6 +114,10 @@ h2 {
 
 #menu li #third {
 	background: url("img/p_third.png") no-repeat left center;
+}
+
+#menu li #usage {
+	background: url("img/p_usage.png") no-repeat left center;
 }
 
 #menu li a:hover:visited {

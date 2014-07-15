@@ -35,6 +35,10 @@ $params["pages"] = array(
 		"title" => "third page"
 	),
 	array(
+		"path" => "pages/usage.html",
+		"title" => "basic usage"
+	),
+	array(
 		"path" => "pages/404.html",
 		"title" => "404",
 		"visible" => false // menu visibility flag

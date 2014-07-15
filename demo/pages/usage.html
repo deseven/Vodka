@@ -1,0 +1,66 @@
+<div class="data">
+	<h2>Basic Usage</h2>
+	<p>
+		First of all, we need to define some basic site parameters:
+		<pre class="prettyprint">
+$params["system"] = array(
+	"root" => realpath(dirname(__FILE__)),
+	"show_errors" => true
+);</pre>
+		Pages:
+		<pre class="prettyprint">
+// you should create the necessary files and place it in the
+// correct locations, related to the site root
+
+$params["pages"] = array(
+	array(
+		"path" => "pages/main.html",
+		"title" => "main page"
+	),
+	array(
+		"path" => "pages/sec.html",
+		"title" => "second page"
+	)
+);</pre>
+		Templates:
+		<pre class="prettyprint">
+// the template should contain at lease one file
+// called template.html
+
+// it can contain the following variables:
+// {VODKA&#058;HEAD} - where to append head tags
+// {VODKA&#058;MENU} - where to place the generated menu
+// {VODKA&#058;CONTENT} - loaded page content
+// {VODKA&#058;TITLE} - page title
+// {VODKA&#058;TEMPLATE} - template path (if needed)
+
+$params["templates"] = array(
+	"demo" => "tpl/demo"
+);</pre>
+		And a basic menu:
+		<pre class="prettyprint">
+// selected_class will be appended to the
+// menu item of the current page
+
+$params["menus"] = array(
+	"html" => '&lt;li&gt;&lt;a href="{VODKA&#058;URL}" 
+	id="{VODKA&#058;NAME}" 
+	class="{VODKA&#058;CLASS}"&gt;{VODKA&#058;TITLE}&lt;/a&gt;&lt;/li&gt;',
+	"selected_class" => "selected"
+);</pre>
+		The next step is to include the class file and to initialize vodka:
+		<pre class="prettyprint">
+require "vodka.class.php";
+$vodka = new vodka($params);</pre>
+		After that we will load the template and the page, build the menu and then output the generated page:
+		<pre class="prettyprint">
+$vodka->loadTemplate("demo");
+$vodka->loadCurrentPage();
+$vodka->buildCurrentMenu();
+$vodka->buildCurrentPage();</pre>
+		That's it!<br><br>
+		Check the <a href="https://github.com/deseven/vodka/tree/master/demo">demo sources</a> to get some advanced usage examples.<br><br>
+		Have fun with vodka! :)
+	</p>
+	
+</div>

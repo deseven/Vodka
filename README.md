@@ -18,7 +18,7 @@ basic php knowledge
 **A:** Not much, check the [demo](http://home-nadym.ru/vodka/demo/). I'll add more functionality in case I (or someone else) will need it.
 
 **Q:** How to use it?  
-**A:** Check the demo files to get the basics. Everything is pretty self-explanatory.
+**A:** Check the [basic usage page](http://home-nadym.ru/vodka/demo/?usage). Then check the demo source files. Everything is pretty self-explanatory.
 
 **Q:** What name is that?  
 **A:** Just imagine how cool it is to have a website which is based on vodka!
