@@ -1,19 +1,20 @@
 <?php
 
 /*
-* Vodka rev.2
+* Vodka rev.3
 * written by deseven
 * website: http://deseven.info
 */
 
 class vodka {
 
-	const rev = 2;
+	const rev = 3;
 
 	const head = "{VODKA:HEAD}";
 	const menu = "{VODKA:MENU}";
 	const content = "{VODKA:CONTENT}";
 	const title = "{VODKA:TITLE}";
+	const template = "{VODKA:TEMPLATE}";
 	const url = "{VODKA:URL}";
 	const name = "{VODKA:NAME}";
 	const cclass = "{VODKA:CLASS}";
@@ -32,6 +33,7 @@ class vodka {
 	protected $content;
 
 	protected $current_page;
+	protected $current_template;
 
 	protected $page_built;
 	protected $output;
@@ -127,6 +129,7 @@ class vodka {
 			$this->printError("no such template defined.");
 			return false;
 		}
+		$this->current_template = $this->templates[$name];
 		return true;
 	}
 
@@ -260,6 +263,7 @@ class vodka {
 		$this->output = $this->template;
 		$this->output = str_replace($this::content,$this->content,$this->output);
 		$this->output = str_replace($this::head,$this->head,$this->output);
+		$this->output = str_replace($this::template,$this->current_template,$this->output);
 		$this->output = str_replace($this::title,$page["title"],$this->output);
 		$this->output = str_replace($this::menu,$this->menu,$this->output);
 		$this->output = str_replace($this->replace,$this->subject,$this->output);
@@ -268,7 +272,7 @@ class vodka {
 		return true;
 	}
 
-	public function replaceVar($var,$string) {
+	public function replaceVar($var,$string = null) {
 		$this->replace[] = $var;
 		$this->subject[] = $string;
 		return true;
