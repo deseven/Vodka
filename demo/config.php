@@ -23,22 +23,19 @@ $params["aliases"] = array(
 $params["pages"] = array(
 	array(
 		"path" => "pages/main.html", // location (relative to the root dir)
-		"name" => "main",            // internal page name
 		"title" => "main page"       // title for the menu entry
 	),
 	array(
-		"path" => "pages/second.html",
-		"name" => "second",
+		"path" => "pages/sec.html",
+		"name" => "second", // if we want to define name explicitly
 		"title" => "second page"
 	),
 	array(
 		"path" => "pages/third.html",
-		"name" => "third",
 		"title" => "third page"
 	),
 	array(
 		"path" => "pages/404.html",
-		"name" => "404",
 		"title" => "404",
 		"visible" => false // menu visibility flag
 	)

@@ -1,14 +1,14 @@
 <?php
 
 /*
-* Vodka rev.1 
+* Vodka rev.2
 * written by deseven
 * website: http://deseven.info
 */
 
 class vodka {
 
-	const rev = 1;
+	const rev = 2;
 
 	const head = "{VODKA:HEAD}";
 	const menu = "{VODKA:MENU}";
@@ -98,8 +98,15 @@ class vodka {
 		if (isset($params["menus"])) {
 			$this->menus = $params["menus"];	
 		}
-		
+
 		$this->pages = $params["pages"];
+		foreach ($this->pages as &$page) {
+			if (!isset($page["name"])) {
+				$path_parts = pathinfo($page["path"]);
+				$page["name"] = $path_parts["filename"];
+			}
+		}
+
 		$this->templates = $params["templates"];
 	}
 
