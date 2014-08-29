@@ -2,7 +2,7 @@
 
 $params["system"] = array(
 	"root" => realpath(dirname(__FILE__)),
-	"clean_urls" => false, // not really working right now, don't use
+	"clean_urls" => false, // if you want to enable that don't forget to check the included .htaccess
 	"404_page" => "404", // a page which we will use when the page is not found
 	"main_page" => "main", // default page, you can remove to pick random page every time
 	"show_errors" => true
