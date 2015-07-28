@@ -1,14 +1,32 @@
 <?php
 
 /*
-* Vodka rev.4
+* Vodka rev.5
 * written by deseven
 * website: http://deseven.info
 */
 
+if (!function_exists("mb_pathinfo")) {
+    function mb_pathinfo($path, $opt = "") {
+        $separator = " qq ";
+        $path = preg_replace("/[^ ]/u", $separator."\$0".$separator, $path);
+        if ($opt == "") $pathinfo = pathinfo($path);
+        else $pathinfo = pathinfo($path, $opt);
+
+        if (is_array($pathinfo)) {
+            $pathinfo2 = $pathinfo;
+            foreach($pathinfo2 as $key => $val) {
+                $pathinfo[$key] = str_replace($separator, "", $val);
+            }
+        }
+        else if (is_string($pathinfo)) $pathinfo = str_replace($separator, "", $pathinfo);
+        return $pathinfo;
+    }
+}
+
 class vodka {
 
-    const rev = 4;
+    const rev = 5;
 
     const head = "{VODKA:HEAD}";
     const menu = "{VODKA:MENU}";
@@ -22,6 +40,7 @@ class vodka {
     protected $root;
     protected $clean_urls;
     protected $show_errors;
+    protected $auto_pages;
     protected $main_page;
     protected $notfound_page;
     protected $pages;
@@ -54,15 +73,6 @@ class vodka {
 
     function __construct($params) {
         $this->start_time = microtime(true);
-        
-        if (isset($params["system"]["show_errors"])) {
-            $this->show_errors = $params["system"]["show_errors"];
-        }
-        if ($this->show_errors == true) {
-            error_reporting(E_ERROR|E_WARNING|E_PARSE); 
-        } else {
-            error_reporting(0);
-        }
 
         if (!isset($params)) {
             $this->printError("no params defined.");
@@ -72,17 +82,14 @@ class vodka {
             $this->printError("no system params defined.");
             return false;
         }
-        if (!isset($params["templates"])) {
-            $this->printError("no templates defined.");
-            return false;
+        
+        if (isset($params["system"]["show_errors"])) {
+            $this->show_errors = $params["system"]["show_errors"];
         }
-        if (!isset($params["pages"])) {
-            $this->printError("no pages defined.");
-            return false;
-        }
-
-        if (isset($params["aliases"])) {
-            $this->aliases = $params["aliases"];
+        if ($this->show_errors == true) {
+            error_reporting(E_ERROR|E_WARNING|E_PARSE); 
+        } else {
+            error_reporting(0);
         }
 
         if (isset($params["system"]["root"])) {
@@ -97,15 +104,50 @@ class vodka {
         if (isset($params["system"]["404_page"])) {
             $this->notfound_page = $params["system"]["404_page"];
         }
+        if (isset($params["system"]["auto_pages"])) {
+            $this->auto_pages = $params["system"]["auto_pages"];
+        }
+
         if (isset($params["menus"])) {
             $this->menus = $params["menus"];    
+        }
+
+        if (!isset($params["templates"])) {
+            $this->printError("no templates defined.");
+            return false;
+        }
+        if ((!isset($params["pages"])) && (!strlen($this->auto_pages))) {
+            $this->printError("no pages defined.");
+            return false;
+        }
+
+        if (isset($params["aliases"])) {
+            $this->aliases = $params["aliases"];
         }
 
         $this->pages = $params["pages"];
         foreach ($this->pages as &$page) {
             if (!isset($page["name"])) {
-                $path_parts = pathinfo($page["path"]);
-                $page["name"] = $path_parts["filename"];
+                $page["name"] = mb_pathinfo($page["path"],PATHINFO_FILENAME);
+            }
+        }
+
+        if (strlen($this->auto_pages)) {
+            foreach (glob($this->auto_pages."/*.{html,htm,txt}",GLOB_BRACE) as $file) {
+                $add = true;
+                foreach ($this->pages as $addedpage) {
+                    if ($addedpage["path"] == $file) {
+                        $add = false;
+                        break;
+                    }
+                }
+                if ($add) {
+                    $this->pages[] = array(
+                        "path" => $file,
+                        "title" => mb_pathinfo($file,PATHINFO_FILENAME),
+                        "name" => mb_pathinfo($file,PATHINFO_FILENAME)
+                    );
+                }
             }
         }
 
@@ -138,7 +180,7 @@ class vodka {
             return $this->current_page;
         }
         foreach ($this->pages as $page) {
-            if (isset($_GET[$page["name"]])) {
+            if (isset($_GET[str_replace(" ","_",$page["name"])])) {
                 $this->current_page = $page;
                 return $page;
             }
