@@ -171,6 +171,18 @@ h2 {
 	color: #ccc;
 }
 
+#footer {
+	font-family: monospace;
+	font-size: 8px;
+	margin-top: 5px;
+	margin-left: 5px;
+}
+
+#footer a {
+	text-decoration: none;
+	color: #099;
+}
+
 .blurred {
 	-webkit-filter: blur(5px);
 	-moz-filter: blur(5px);
