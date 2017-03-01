@@ -1,6 +1,6 @@
 <?php
 
-require "../vodka.class.php"; // main class
+require "vodka.class.php"; // main class
 require "config.php"; // this is where all our settings are
 
 $vodka = new vodka($params); // init

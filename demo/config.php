@@ -6,6 +6,7 @@ $params["system"] = array(
 	"404_page" => "404", // a page which we will use when the page is not found
 	"main_page" => "main", // default page, you can remove to pick random page every time
 	"auto_pages" => "pages", // try to populate pages automatically from this directory
+	"forbid_scriptname" => true, // this will redirect user to root if script name has been found in url
 	"clean_unused_vars" => true, // try to clean unused vars on page output, be careful with that as it replaces everything by pattern {[A-Z0-9:]+}
 	"show_errors" => true // this enables error output, keep in mind that setting it to false will also supress php errors and warnings
 );
@@ -54,7 +55,7 @@ $params["pages"] = array(
 );
 
 $params["templates"] = array(
-	"demo" => dirname($_SERVER['PHP_SELF'])."tpl/demo" // name and path to the template dir
+	"demo" => "tpl/demo" // name and path to the template dir, relative to the site root
 );
 
 ?>

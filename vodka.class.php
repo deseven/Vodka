@@ -40,6 +40,7 @@ class vodka {
     protected $root;
     protected $clean_urls;
     protected $show_errors;
+    protected $forbid_scriptname;
     protected $clean_unused_vars;
     protected $auto_pages;
     protected $main_page;
@@ -99,6 +100,9 @@ class vodka {
         if (isset($params['system']['root'])) {
             $this->root = $params['system']['root'];
         }
+        if (isset($params['system']['forbid_scriptname'])) {
+            $this->forbid_scriptname = $params['system']['forbid_scriptname'];
+        }
         if (isset($params['system']['clean_urls'])) {
             $this->clean_urls = $params['system']['clean_urls'];
         }
@@ -156,6 +160,31 @@ class vodka {
         }
 
         $this->templates = $params['templates'];
+
+        if ($this->forbid_scriptname) {
+            if (strpos($_SERVER['REQUEST_URI'],$_SERVER['PHP_SELF']) === 0) {
+                $_SERVER['REQUEST_URI'] = str_replace($_SERVER['PHP_SELF'],dirname($_SERVER['PHP_SELF']),$_SERVER['REQUEST_URI']);
+                header('Location: '.$_SERVER['REQUEST_URI'],true,301);
+                exit;
+            }
+        }
+
+        $_SERVER['REQUEST_URI'] = str_replace(dirname($_SERVER['PHP_SELF']),'',$_SERVER['REQUEST_URI']);
+        $_SERVER['REQUEST_URI'] = str_replace(mb_pathinfo($_SERVER['PHP_SELF'],PATHINFO_FILENAME),'',$_SERVER['REQUEST_URI']);
+        $_SERVER['REQUEST_URI'] = ltrim($_SERVER['REQUEST_URI'],'/');
+        if (strlen($_SERVER['REQUEST_URI'])) {
+            if ($this->clean_urls) {
+                if (substr($_SERVER['REQUEST_URI'],0,1) == "?") {
+                    header('Location: '.$_SERVER['QUERY_STRING'],true,301);
+                    exit;
+                }
+            } else {
+                if (substr($_SERVER['REQUEST_URI'],0,1) != "?") {
+                    header('Location: '.dirname($_SERVER['PHP_SELF']).'/?'.$_SERVER['REQUEST_URI'],true,301);
+                    exit;
+                }
+            }
+        }
     }
 
     public function getStartTime() {
@@ -166,7 +195,7 @@ class vodka {
         $this->page_built = false;
         if (isset($this->templates[$name])) {
             if (file_exists($this->root.'/'.$this->templates[$name].'/template.html')) {
-                $this->template = file_get_contents($this->root.'/'.$this->templates[$name].'/template.html');
+                $this->template = file_get_contents($this->root."/".$this->templates[$name].'/template.html');
             } else {
                 $this->printError('template `$name` not found.');
                 return false;
@@ -175,7 +204,12 @@ class vodka {
             $this->printError('no such template defined.');
             return false;
         }
-        $this->current_template = $this->templates[$name];
+        if (dirname($_SERVER['PHP_SELF']) == '/') {
+            $this->current_template = '/'.$this->templates[$name];
+        }
+        else {
+            $this->current_template = dirname($_SERVER['PHP_SELF']).'/'.$this->templates[$name];
+        }
         return true;
     }
 
@@ -299,6 +333,7 @@ class vodka {
     public function buildPage($page = null) {
         if ($page === null) {
             $this->printError('page not defined.');
+            header($_SERVER['SERVER_PROTOCOL'].' 404 Not Found',true,404);
             return false;
         }
         if ($_SERVER['QUERY_STRING'] == $this->main_page) {
