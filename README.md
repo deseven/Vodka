@@ -7,6 +7,18 @@ Simple and tiny PHP flat-file site engine.
 PHP 5.2 or higher  
 basic php knowledge
 
+## webserver configuration
+### apache
+Use `.htaccess` files from the demo.  
+
+### lighttpd
+Use `url.rewrite-if-not-file = ( "^(.*)$" => "index.php?$1" )` for clean urls.  
+Use `$HTTP["url"] =~ "^/pages/" { url.access-deny = ( "" ) }` for pages directory protection, etc.  
+
+### nginx
+Use `location / { try_files $uri $uri/ /index.php?$request_uri; }` for clean urls.  
+Use `location ^~ /pages/ { return 403; }` for pages directory protection, etc.  
+
 ## FAQ
 **Q:** What is it for?  
 **A:** For small promo-sites, homepages, etc...
@@ -15,10 +27,10 @@ basic php knowledge
 **A:** I like to do it my way.
 
 **Q:** What can it do?  
-**A:** Not much, check the [demo](http://home-nadym.ru/vodka/demo/). I'll add more functionality in case I (or someone else) will need it.
+**A:** Not much, check the [demo](http://vodka.deseven.info). I'll add more functionality in case I (or someone else) will need it.
 
 **Q:** How to use it?  
-**A:** Check the [basic usage page](http://home-nadym.ru/vodka/demo/?usage). Then check the demo source files. Everything is pretty self-explanatory.
+**A:** Check the [basic usage page](http://vodka.deseven.info/usage). Then check the demo source files. Everything is pretty self-explanatory.
 
 **Q:** What name is that?  
 **A:** Just imagine how cool it is to have a website which is based on vodka!

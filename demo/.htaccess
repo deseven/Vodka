@@ -4,5 +4,4 @@ RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteRule ^(.*)$ index.php?$1 [L,QSA]
 
-# for lighttpd use
-# url.rewrite-if-not-file = ( "^(.*)$" => "index.php?$1" )
+# for lighttpd and nginx check readme here - https://github.com/deseven/vodka/

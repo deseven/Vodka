@@ -1,12 +1,13 @@
 <?php
 
 $params["system"] = array(
-	"root" => realpath(dirname(__FILE__)),
+	"root" => realpath(dirname(__FILE__)), // you can change that to absolute or relative path if you store your site files elsewhere
 	"clean_urls" => false, // if you want to enable that don't forget to check the included .htaccess
 	"404_page" => "404", // a page which we will use when the page is not found
 	"main_page" => "main", // default page, you can remove to pick random page every time
 	"auto_pages" => "pages", // try to populate pages automatically from this directory
-	"show_errors" => true
+	"clean_unused_vars" => true, // try to clean unused vars on page output, be careful with that as it replaces everything by pattern {[A-Z0-9:]+}
+	"show_errors" => true // this enables error output, keep in mind that setting it to false will also supress php errors and warnings
 );
 
 $params["menus"] = array(

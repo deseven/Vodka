@@ -1,7 +1,7 @@
 <?php
 
 /*
-* Vodka rev.5
+* Vodka rev.6
 * written by deseven
 * website: http://deseven.info
 */
@@ -26,7 +26,7 @@ if (!function_exists("mb_pathinfo")) {
 
 class vodka {
 
-    const rev = 5;
+    const rev = 6;
 
     const head = "{VODKA:HEAD}";
     const menu = "{VODKA:MENU}";
@@ -40,6 +40,7 @@ class vodka {
     protected $root;
     protected $clean_urls;
     protected $show_errors;
+    protected $clean_unused_vars;
     protected $auto_pages;
     protected $main_page;
     protected $notfound_page;
@@ -85,6 +86,9 @@ class vodka {
         
         if (isset($params["system"]["show_errors"])) {
             $this->show_errors = $params["system"]["show_errors"];
+        }
+        if (isset($params["system"]["clean_unused_vars"])) {
+            $this->clean_unused_vars = $params["system"]["clean_unused_vars"];
         }
         if ($this->show_errors == true) {
             error_reporting(E_ERROR|E_WARNING|E_PARSE); 
@@ -180,7 +184,7 @@ class vodka {
             return $this->current_page;
         }
         foreach ($this->pages as $page) {
-            if (isset($_GET[str_replace(" ","_",$page["name"])])) {
+            if ( (isset($_GET[str_replace(" ","_",$page["name"])])) || (isset($_GET["/".str_replace(" ","_",$page["name"])])) ) {
                 $this->current_page = $page;
                 return $page;
             }
@@ -304,6 +308,12 @@ class vodka {
         $this->output = str_replace($this::title,$page["title"],$this->output);
         $this->output = str_replace($this::menu,$this->menu,$this->output);
         $this->output = str_replace($this->replace,$this->subject,$this->output);
+        if ($this->clean_unused_vars) {
+            $this->output = preg_replace("/{[A-Z0-9:]+}/","",$this->output);
+        }
+        if ($page["name"] == $this->notfound_page) {
+            header($_SERVER["SERVER_PROTOCOL"]." 404 Not Found",true,404);
+        }
         $this->page_built = true;
         echo $this->output;
         return true;
