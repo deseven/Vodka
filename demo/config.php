@@ -44,11 +44,17 @@ $params["pages"] = array(
 		"path" => "pages/404.html",
 		"title" => "404",
 		"visible" => false // menu visibility flag
+	),
+	array(
+		"path" => "pages/sec.html",
+		"title" => "long path test",
+		"name" => "long/path/test", // you can also use long paths if you want
+		"visible" => false
 	)
 );
 
 $params["templates"] = array(
-	"demo" => "tpl/demo" // name and path to the template dir
+	"demo" => dirname($_SERVER['PHP_SELF'])."tpl/demo" // name and path to the template dir
 );
 
 ?>
