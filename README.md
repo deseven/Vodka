@@ -7,7 +7,7 @@ Simple and tiny PHP flat-file site engine.
 PHP 5.2 or higher  
 basic php knowledge
 
-## webserver configuration
+## demo webserver configuration
 ### apache
 Use `.htaccess` files from the demo.  
 

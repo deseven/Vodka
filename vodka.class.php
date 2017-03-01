@@ -302,7 +302,7 @@ class vodka {
             return false;
         }
         if ($_SERVER['QUERY_STRING'] == $this->main_page) {
-            header('Location: '.dirname($_SERVER['PHP_SELF']),true,302);
+            header('Location: '.dirname($_SERVER['PHP_SELF']),true,301);
             return true;
         }
         $this->output = $this->template;
