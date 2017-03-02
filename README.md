@@ -4,8 +4,8 @@ vodka
 Simple and tiny PHP flat-file site engine.
 
 ## dependencies
-PHP 5.2 or higher  
-basic php knowledge
+PHP 5.2 or higher (PHP7 recommended)  
+basic php knowledge  
 
 ## demo webserver configuration
 ### apache

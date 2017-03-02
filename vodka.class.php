@@ -1,7 +1,7 @@
 <?php
 
 /*
-* Vodka rev.7
+* Vodka rev.8
 * written by deseven
 * website: http://deseven.info
 */
@@ -26,7 +26,7 @@ if (!function_exists('mb_pathinfo')) {
 
 class vodka {
 
-    const rev = 7;
+    const rev = 8;
 
     const head = '{VODKA:HEAD}';
     const menu = '{VODKA:MENU}';
@@ -38,7 +38,6 @@ class vodka {
     const cclass = '{VODKA:CLASS}';
 
     protected $root;
-    protected $clean_urls;
     protected $show_errors;
     protected $forbid_scriptname;
     protected $clean_unused_vars;
@@ -99,12 +98,11 @@ class vodka {
 
         if (isset($params['system']['root'])) {
             $this->root = $params['system']['root'];
+        } else {
+            $this->root = realpath(dirname(__FILE__));
         }
         if (isset($params['system']['forbid_scriptname'])) {
             $this->forbid_scriptname = $params['system']['forbid_scriptname'];
-        }
-        if (isset($params['system']['clean_urls'])) {
-            $this->clean_urls = $params['system']['clean_urls'];
         }
         if (isset($params['system']['main_page'])) {
             $this->main_page = $params['system']['main_page'];
@@ -164,25 +162,10 @@ class vodka {
         if ($this->forbid_scriptname) {
             if (strpos($_SERVER['REQUEST_URI'],$_SERVER['PHP_SELF']) === 0) {
                 $_SERVER['REQUEST_URI'] = str_replace($_SERVER['PHP_SELF'],dirname($_SERVER['PHP_SELF']),$_SERVER['REQUEST_URI']);
+                $_SERVER['REQUEST_URI'] = preg_replace('~/{2,}~','/',$_SERVER['REQUEST_URI']);
+                //echo "will redirect to ".$_SERVER['REQUEST_URI'];
                 header('Location: '.$_SERVER['REQUEST_URI'],true,301);
                 exit;
-            }
-        }
-
-        $_SERVER['REQUEST_URI'] = str_replace(dirname($_SERVER['PHP_SELF']),'',$_SERVER['REQUEST_URI']);
-        $_SERVER['REQUEST_URI'] = str_replace(mb_pathinfo($_SERVER['PHP_SELF'],PATHINFO_FILENAME),'',$_SERVER['REQUEST_URI']);
-        $_SERVER['REQUEST_URI'] = ltrim($_SERVER['REQUEST_URI'],'/');
-        if (strlen($_SERVER['REQUEST_URI'])) {
-            if ($this->clean_urls) {
-                if (substr($_SERVER['REQUEST_URI'],0,1) == "?") {
-                    header('Location: '.$_SERVER['QUERY_STRING'],true,301);
-                    exit;
-                }
-            } else {
-                if (substr($_SERVER['REQUEST_URI'],0,1) != "?") {
-                    header('Location: '.dirname($_SERVER['PHP_SELF']).'/?'.$_SERVER['REQUEST_URI'],true,301);
-                    exit;
-                }
             }
         }
     }
@@ -214,25 +197,26 @@ class vodka {
     }
 
     public function getCurrentPage() {
-        $_SERVER['QUERY_STRING'] = ltrim($_SERVER['QUERY_STRING'],'/');
         if (is_array($this->current_page)) {
             return $this->current_page;
         }
-        if (isset($this->aliases[$_SERVER['QUERY_STRING']])) {
+        $_SERVER['REQUEST_URI'] = str_replace(basename($_SERVER['PHP_SELF']),'',$_SERVER['REQUEST_URI']);
+        $_SERVER['REQUEST_URI'] = trim($_SERVER['REQUEST_URI'],'/');
+        if (isset($this->aliases[$_SERVER['REQUEST_URI']])) {
             foreach ($this->pages as $page) {
-                if ($page['name'] == $this->aliases[$_SERVER['QUERY_STRING']]) {
+                if ($page['name'] == $this->aliases[$_SERVER['REQUEST_URI']]) {
                     $this->current_page = $page;
                     return $page;
                 }
             }
         }
         foreach ($this->pages as $page) {
-            if ($page['name'] == $_SERVER['QUERY_STRING']) {
+            if ($page['name'] == $_SERVER['REQUEST_URI']) {
                 $this->current_page = $page;
                 return $page;
             }
         }
-        if (strlen($_SERVER['QUERY_STRING']) == 0) {
+        if (strlen($_SERVER['REQUEST_URI']) == 0) {
             if (strlen($this->main_page) > 0) {
                 foreach ($this->pages as $page) {
                     if ($page['name'] == $this->main_page) {
@@ -315,10 +299,10 @@ class vodka {
                     $cur_item = str_replace($this::cclass,'',$cur_item);
                 }
                 $cur_item = str_replace($this::name,$this->pages[$i]['name'],$cur_item);
-                if ($this->clean_urls) {
-                    $cur_item = str_replace($this::url,dirname($_SERVER['PHP_SELF']).$this->pages[$i]['name'],$cur_item);
+                if (dirname($_SERVER['PHP_SELF']) != '/') {
+                    $cur_item = str_replace($this::url,dirname($_SERVER['PHP_SELF']).'/'.$this->pages[$i]['name'],$cur_item);
                 } else {
-                    $cur_item = str_replace($this::url,dirname($_SERVER['PHP_SELF']).'?'.$this->pages[$i]['name'],$cur_item);
+                    $cur_item = str_replace($this::url,'/'.$this->pages[$i]['name'],$cur_item);
                 }
                 $cur_item = str_replace($this::title,$this->pages[$i]['title'],$cur_item);
                 $this->menu .= $cur_item;
@@ -336,7 +320,7 @@ class vodka {
             header($_SERVER['SERVER_PROTOCOL'].' 404 Not Found',true,404);
             return false;
         }
-        if ($_SERVER['QUERY_STRING'] == $this->main_page) {
+        if ($_SERVER['REQUEST_URI'] == $this->main_page) {
             header('Location: '.dirname($_SERVER['PHP_SELF']),true,301);
             return true;
         }
