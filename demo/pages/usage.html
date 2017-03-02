@@ -4,13 +4,13 @@
 		First of all, we need to define some basic site parameters:
 		<pre class="prettyprint">
 $params["system"] = array(
-	"root" => realpath(dirname(__FILE__)),
-	"show_errors" => true
+	"show_errors" => true,
+	"clean_unused_vars" => true
 );</pre>
 		Pages:
 		<pre class="prettyprint">
 // you should create the necessary files and place it in the
-// correct locations, related to the site root
+// correct locations, relative to the site root
 
 $params["pages"] = array(
 	array(

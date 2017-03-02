@@ -27,7 +27,7 @@ Use `location ^~ /pages/ { return 403; }` for pages directory protection, etc.
 **A:** I like to do it my way.
 
 **Q:** What can it do?  
-**A:** Not much, check the [demo](http://vodka.deseven.info). I'll add more functionality in case I (or someone else) will need it.
+**A:** Not much, check the [demo](http://vodka.deseven.info) or the [dev version](http://dev.vodka.deseven.info/) with various tests. I'll add more functionality in case I (or someone else) will need it.
 
 **Q:** How to use it?  
 **A:** Check the [basic usage page](http://vodka.deseven.info/usage). Then check the demo source files. Everything is pretty self-explanatory.

@@ -1,7 +1,7 @@
 <?php
 
 /*
-* Vodka rev.8
+* Vodka rev.9
 * written by deseven
 * website: http://deseven.info
 */
@@ -26,7 +26,7 @@ if (!function_exists('mb_pathinfo')) {
 
 class vodka {
 
-    const rev = 8;
+    const rev = 9;
 
     const head = '{VODKA:HEAD}';
     const menu = '{VODKA:MENU}';
@@ -66,9 +66,13 @@ class vodka {
 
     protected $start_time;
 
-    private function printError($error) {
+    private function printError($error,$die = true) {
         if ($this->show_errors) {
             echo '<div style="color:white;border:1px solid black;background-color:#990000">[vodka rev.'.$this::rev.'] '.$error.'</div>';
+        }
+        if ($die) {
+            header($_SERVER['SERVER_PROTOCOL']." 418 I'm a teapot",true,418);
+            exit;
         }
     }
 
@@ -122,7 +126,7 @@ class vodka {
             $this->printError('no templates defined.');
             return false;
         }
-        if ((!isset($params['pages'])) && (!strlen($this->auto_pages))) {
+        if ((!isset($params['pages'])) && (!$this->auto_pages)) {
             $this->printError('no pages defined.');
             return false;
         }
@@ -138,7 +142,7 @@ class vodka {
             }
         }
 
-        if (strlen($this->auto_pages)) {
+        if ($this->auto_pages) {
             foreach (glob($this->auto_pages."/*.{html,htm,txt}",GLOB_BRACE) as $file) {
                 $add = true;
                 foreach ($this->pages as $addedpage) {
@@ -200,6 +204,7 @@ class vodka {
         if (is_array($this->current_page)) {
             return $this->current_page;
         }
+        $_SERVER['REQUEST_URI'] = urldecode($_SERVER['REQUEST_URI']);
         $_SERVER['REQUEST_URI'] = str_replace(basename($_SERVER['PHP_SELF']),'',$_SERVER['REQUEST_URI']);
         $_SERVER['REQUEST_URI'] = trim($_SERVER['REQUEST_URI'],'/');
         if (isset($this->aliases[$_SERVER['REQUEST_URI']])) {
@@ -216,8 +221,8 @@ class vodka {
                 return $page;
             }
         }
-        if (strlen($_SERVER['REQUEST_URI']) == 0) {
-            if (strlen($this->main_page) > 0) {
+        if (!$_SERVER['REQUEST_URI']) {
+            if ($this->main_page) {
                 foreach ($this->pages as $page) {
                     if ($page['name'] == $this->main_page) {
                         $this->current_page = $page;
@@ -230,7 +235,7 @@ class vodka {
                 return $this->pages[$random_page];
             }
         }
-        if (strlen($this->notfound_page) > 0) {
+        if ($this->notfound_page) {
             foreach ($this->pages as $page) {
                 if ($page['name'] == $this->notfound_page) {
                     $this->current_page = $page;
@@ -260,7 +265,7 @@ class vodka {
                 $this->content = file_get_contents($this->root.'/'.$page['path']);
                 return true;
             } else {
-                $this->printError('page not found.');
+                $this->printError('page not found, check your config.',false);
                 return false;
             }
         } else {
@@ -317,12 +322,13 @@ class vodka {
     public function buildPage($page = null) {
         if ($page === null) {
             $this->printError('page not defined.');
-            header($_SERVER['SERVER_PROTOCOL'].' 404 Not Found',true,404);
             return false;
         }
-        if ($_SERVER['REQUEST_URI'] == $this->main_page) {
-            header('Location: '.dirname($_SERVER['PHP_SELF']),true,301);
-            return true;
+        if ($this->main_page) {
+            if ($_SERVER['REQUEST_URI'] == $this->main_page) {
+                header('Location: '.dirname($_SERVER['PHP_SELF']),true,301);
+                return true;
+            }
         }
         $this->output = $this->template;
         $this->output = str_replace($this::content,$this->content,$this->output);
