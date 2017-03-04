@@ -18,7 +18,7 @@ $params["menus"] = array(
 );
 
 $params["aliases"] = array(
-	"other_page"                   => "third", // there we can define various aliases, in this case, url with ?other_page will lead us to the page called "third"
+	"other_page"                   => "third", // there we can define various aliases, in this case, url with other_page will lead us to the page called "third"
 	"i=like&to=use&some=variables" => "second"
 );
 
@@ -27,7 +27,11 @@ $params["pages"] = array(
 		"path"        => "pages/main.html", // location (relative to the root dir)
 		"title"       => "main page",      // title for the menu entry
 		"description" => "main page of this site", // meta description
-		"keywords"    => "vodka, php, site engine, lightweight, flat-file" // meta keywords
+		"keywords"    => "vodka, php, site engine, lightweight, flat-file", // meta keywords
+		"custom"      => array( // custom values which will be inserted to the page, you can also do it manually with replaceVar() function, check index.php for more info
+			"{GREETING}"  => 'Hello, this is a demo site of Vodka, simple and tiny flat-file engine, written in PHP. You can <a href="{URL}">grab the latest version on github</a>.',
+			"{URL}"       => "https://github.com/deseven/vodka/"
+		)
 	),
 	array(
 		"path"        => "pages/sec.html",

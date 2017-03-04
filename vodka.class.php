@@ -1,7 +1,7 @@
 <?php
 
 /*
-* Vodka rev.9
+* Vodka rev.10
 * written by deseven
 * website: http://deseven.info
 */
@@ -26,9 +26,11 @@ if (!function_exists('mb_pathinfo')) {
 
 class vodka {
 
-    const rev = 9;
+    const rev = 10;
 
     const head = '{VODKA:HEAD}';
+    const description = '{VODKA:DESCRIPTION}';
+    const keywords = '{VODKA:KEYWORDS}';
     const menu = '{VODKA:MENU}';
     const content = '{VODKA:CONTENT}';
     const title = '{VODKA:TITLE}';
@@ -139,6 +141,15 @@ class vodka {
         foreach ($this->pages as &$page) {
             if (!isset($page['name'])) {
                 $page['name'] = mb_pathinfo($page['path'],PATHINFO_FILENAME);
+            }
+            if (!isset($page['title'])) {
+                $page['title'] = $page['name'];
+            }
+            if (!isset($page['description'])) {
+                $page['description'] = $page['title'];
+            }
+            if (!isset($page['keywords'])) {
+                $page['keywords'] = "";
             }
         }
 
@@ -263,6 +274,13 @@ class vodka {
         } elseif (isset($page['path'])) {
             if (file_exists($this->root.'/'.$page['path'])) {
                 $this->content = file_get_contents($this->root.'/'.$page['path']);
+                if (isset($page['custom'])) {
+                    while ($custom = current($page['custom'])) {
+                        $this->replace[] = key($page['custom']);
+                        $this->subject[] = $page['custom'][key($page['custom'])];
+                        next($page['custom']);
+                    }
+                }
                 return true;
             } else {
                 $this->printError('page not found, check your config.',false);
@@ -333,6 +351,8 @@ class vodka {
         $this->output = $this->template;
         $this->output = str_replace($this::content,$this->content,$this->output);
         $this->output = str_replace($this::head,$this->head,$this->output);
+        $this->output = str_replace($this::description,$page['description'],$this->output);
+        $this->output = str_replace($this::keywords,$page['keywords'],$this->output);
         $this->output = str_replace($this::template,$this->current_template,$this->output);
         $this->output = str_replace($this::title,$page['title'],$this->output);
         $this->output = str_replace($this::menu,$this->menu,$this->output);

@@ -18,11 +18,9 @@ $vodka->replaceVar("{LOREM}",$lorem);
 $vodka->appendHead('<meta name="GENERATOR" content="Vodka">');
 
 // let's insert something based on the current page
+// you can also do that by defining custom page values, check config.php for details
 $page = $vodka->getCurrentPage();
 switch ($page["name"]) {
-	case "main":
-		$vodka->replaceVar("{GREETING}",'Hello, this is a demo site of Vodka, simple and tiny flat-file engine, written in PHP. You can <a href="https://github.com/deseven/vodka/">grab the latest version on github</a>.');
-		break;
 	case "second":
 		$vodka->replaceVar("{CLASS}","second");
 		break;
