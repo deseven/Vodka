@@ -218,13 +218,9 @@ class vodka {
         }
 
         foreach ($this->pages as &$page) {
-            if ($page['name'].'/' == $this->uri) {
-                $_SERVER['REQUEST_URI'] = str_replace($page['name'].'/',$page['name'],$_SERVER['REQUEST_URI']);
-                //echo "will redirect to ".$_SERVER['REQUEST_URI'];
-                header('Location: '.$_SERVER['REQUEST_URI'],true,301);
-                exit;
-            } elseif ($page['name'] == $this->uri.'/') {
-                $_SERVER['REQUEST_URI'] = str_replace($this->uri,$page['name'],$_SERVER['REQUEST_URI']);
+            if (($page['name'].'/' == $this->uri) || ($page['name'] == $this->uri.'/')) {
+                $_SERVER['REQUEST_URI'] = str_replace($this->uri,$page['name'],urldecode($_SERVER['REQUEST_URI']));
+                //echo "replacing ".$this->uri." with ".$page['name']." in ".$_SERVER['REQUEST_URI'];
                 //echo "will redirect to ".$_SERVER['REQUEST_URI'];
                 header('Location: '.$_SERVER['REQUEST_URI'],true,301);
                 exit;
