@@ -1,6 +1,7 @@
 <?php
 
 $params["system"] = array(
+	"base_url"          => "http://vodka.deseven.info/", // base url of your site with trailing slash at the end, the only required parameter in system section
 	"root"              => realpath(dirname(__FILE__)), // you can change that to absolute or relative path if you store your site files elsewhere
 	"404_page"          => "404", // a page which we will use when the page is not found
 	"main_page"         => "main", // default page, you can remove it to pick random page every time
@@ -54,7 +55,7 @@ $params["pages"] = array(
 	array(
 		"path"        => "pages/sec.html",
 		"title"       => "long path test",
-		"name"        => "long/path/test", // you can also use long paths if you want
+		"name"        => "long/path/test/", // you can also use long paths if you want
 		"visible"     => false
 	)
 );

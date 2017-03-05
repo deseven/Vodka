@@ -1,7 +1,7 @@
 <?php
 
 /*
-* Vodka rev.10
+* Vodka rev.11
 * written by deseven
 * website: http://deseven.info
 */
@@ -26,9 +26,10 @@ if (!function_exists('mb_pathinfo')) {
 
 class vodka {
 
-    const rev = 10;
+    const rev = 11;
 
     const head = '{VODKA:HEAD}';
+    const canonical = '{VODKA:CANONICAL}';
     const description = '{VODKA:DESCRIPTION}';
     const keywords = '{VODKA:KEYWORDS}';
     const menu = '{VODKA:MENU}';
@@ -39,6 +40,7 @@ class vodka {
     const name = '{VODKA:NAME}';
     const cclass = '{VODKA:CLASS}';
 
+    protected $base_url;
     protected $root;
     protected $show_errors;
     protected $forbid_scriptname;
@@ -63,6 +65,8 @@ class vodka {
     protected $head;
     protected $menu;
 
+    protected $uri;
+
     protected $replace = array();
     protected $subject = array();
 
@@ -81,6 +85,8 @@ class vodka {
     function __construct($params) {
         $this->start_time = microtime(true);
 
+        $this->show_errors = true;
+
         if (!isset($params)) {
             $this->printError('no params defined.');
             return false;
@@ -88,6 +94,12 @@ class vodka {
         if (!isset($params['system'])) {
             $this->printError('no system params defined.');
             return false;
+        }
+        if (!isset($params['system']['base_url'])) {
+            $this->printError('base_url is required.');
+            return false;
+        } else {
+            $this->base_url = $params['system']['base_url'];
         }
         
         if (isset($params['system']['show_errors'])) {
@@ -138,7 +150,11 @@ class vodka {
         }
 
         $this->pages = $params['pages'];
-        foreach ($this->pages as &$page) {
+        foreach ($this->pages as $key => &$page) {
+            if (!isset($page['path'])) {
+                $this->printError('no path defined for page #'.($key+1).'.');
+                return false;
+            }
             if (!isset($page['name'])) {
                 $page['name'] = mb_pathinfo($page['path'],PATHINFO_FILENAME);
             }
@@ -174,13 +190,55 @@ class vodka {
 
         $this->templates = $params['templates'];
 
+        $this->uri = urldecode($_SERVER['REQUEST_URI']);
+        $this->uri = str_replace(basename($_SERVER['PHP_SELF']),'',$this->uri);
+        $this->uri = ltrim($this->uri,'/');
+        $this->uri = explode('?',$this->uri);
+        $this->uri = $this->uri[0];
+
         if ($this->forbid_scriptname) {
             if (strpos($_SERVER['REQUEST_URI'],$_SERVER['PHP_SELF']) === 0) {
                 $_SERVER['REQUEST_URI'] = str_replace($_SERVER['PHP_SELF'],dirname($_SERVER['PHP_SELF']),$_SERVER['REQUEST_URI']);
                 $_SERVER['REQUEST_URI'] = preg_replace('~/{2,}~','/',$_SERVER['REQUEST_URI']);
+                //echo "will redirect to ".rtrim($this->base_url,'/').$_SERVER['REQUEST_URI'];
+                header('Location: '.rtrim($this->base_url,'/').$_SERVER['REQUEST_URI'],true,301);
+                exit;
+            }
+        }
+
+        if ($this->main_page) {
+            if ($this->uri == $this->main_page) {
+                $_SERVER['REQUEST_URI'] = str_replace($_SERVER['PHP_SELF'],dirname($_SERVER['PHP_SELF']),$_SERVER['REQUEST_URI']);
+                $_SERVER['REQUEST_URI'] = preg_replace('~/{2,}~','/',$_SERVER['REQUEST_URI']);
+                $_SERVER['REQUEST_URI'] = str_replace($this->main_page,'',$_SERVER['REQUEST_URI']);
+                //echo "will redirect to ".rtrim($this->base_url,'/').$_SERVER['REQUEST_URI'];
+                header('Location: '.rtrim($this->base_url,'/').$_SERVER['REQUEST_URI'],true,301);
+                exit;
+            }
+        }
+
+        foreach ($this->pages as &$page) {
+            if ($page['name'].'/' == $this->uri) {
+                $_SERVER['REQUEST_URI'] = str_replace($page['name'].'/',$page['name'],$_SERVER['REQUEST_URI']);
                 //echo "will redirect to ".$_SERVER['REQUEST_URI'];
                 header('Location: '.$_SERVER['REQUEST_URI'],true,301);
                 exit;
+            } elseif ($page['name'] == $this->uri.'/') {
+                $_SERVER['REQUEST_URI'] = str_replace($this->uri,$page['name'],$_SERVER['REQUEST_URI']);
+                //echo "will redirect to ".$_SERVER['REQUEST_URI'];
+                header('Location: '.$_SERVER['REQUEST_URI'],true,301);
+                exit;
+            }
+        }
+
+        if (isset($_GET)) { // fixing GET
+            foreach ($_GET as $key => $value) {
+                unset($_GET[$key]);
+                $key = explode('?',$key);
+                if (isset($key[1])) {
+                    $_GET = array($key[1] => $value) + $_GET;
+                }
+                break;
             }
         }
     }
@@ -206,7 +264,7 @@ class vodka {
             $this->current_template = '/'.$this->templates[$name];
         }
         else {
-            $this->current_template = dirname($_SERVER['PHP_SELF']).'/'.$this->templates[$name];
+            $this->current_template = htmlspecialchars(dirname($_SERVER['PHP_SELF'])).'/'.$this->templates[$name];
         }
         return true;
     }
@@ -215,24 +273,21 @@ class vodka {
         if (is_array($this->current_page)) {
             return $this->current_page;
         }
-        $_SERVER['REQUEST_URI'] = urldecode($_SERVER['REQUEST_URI']);
-        $_SERVER['REQUEST_URI'] = str_replace(basename($_SERVER['PHP_SELF']),'',$_SERVER['REQUEST_URI']);
-        $_SERVER['REQUEST_URI'] = trim($_SERVER['REQUEST_URI'],'/');
-        if (isset($this->aliases[$_SERVER['REQUEST_URI']])) {
+        if (isset($this->aliases[$this->uri])) {
             foreach ($this->pages as $page) {
-                if ($page['name'] == $this->aliases[$_SERVER['REQUEST_URI']]) {
+                if ($page['name'] == $this->aliases[$this->uri]) {
                     $this->current_page = $page;
                     return $page;
                 }
             }
         }
         foreach ($this->pages as $page) {
-            if ($page['name'] == $_SERVER['REQUEST_URI']) {
+            if ($page['name'] == $this->uri) {
                 $this->current_page = $page;
                 return $page;
             }
         }
-        if (!$_SERVER['REQUEST_URI']) {
+        if (!$this->uri) {
             if ($this->main_page) {
                 foreach ($this->pages as $page) {
                     if ($page['name'] == $this->main_page) {
@@ -274,13 +329,6 @@ class vodka {
         } elseif (isset($page['path'])) {
             if (file_exists($this->root.'/'.$page['path'])) {
                 $this->content = file_get_contents($this->root.'/'.$page['path']);
-                if (isset($page['custom'])) {
-                    while ($custom = current($page['custom'])) {
-                        $this->replace[] = key($page['custom']);
-                        $this->subject[] = $page['custom'][key($page['custom'])];
-                        next($page['custom']);
-                    }
-                }
                 return true;
             } else {
                 $this->printError('page not found, check your config.',false);
@@ -323,7 +371,7 @@ class vodka {
                 }
                 $cur_item = str_replace($this::name,$this->pages[$i]['name'],$cur_item);
                 if (dirname($_SERVER['PHP_SELF']) != '/') {
-                    $cur_item = str_replace($this::url,dirname($_SERVER['PHP_SELF']).'/'.$this->pages[$i]['name'],$cur_item);
+                    $cur_item = str_replace($this::url,htmlspecialchars(dirname($_SERVER['PHP_SELF'])).'/'.$this->pages[$i]['name'],$cur_item);
                 } else {
                     $cur_item = str_replace($this::url,'/'.$this->pages[$i]['name'],$cur_item);
                 }
@@ -342,20 +390,17 @@ class vodka {
             $this->printError('page not defined.');
             return false;
         }
-        if ($this->main_page) {
-            if ($_SERVER['REQUEST_URI'] == $this->main_page) {
-                header('Location: '.dirname($_SERVER['PHP_SELF']),true,301);
-                return true;
+        $this->output = $this->template;
+        if (isset($page['custom'])) {
+            $page['custom'] = array_reverse($page['custom']);
+            while ($custom = current($page['custom'])) {
+                array_unshift($this->replace,key($page['custom']));
+                array_unshift($this->subject,$page['custom'][key($page['custom'])]);
+                next($page['custom']);
             }
         }
-        $this->output = $this->template;
-        $this->output = str_replace($this::content,$this->content,$this->output);
-        $this->output = str_replace($this::head,$this->head,$this->output);
-        $this->output = str_replace($this::description,$page['description'],$this->output);
-        $this->output = str_replace($this::keywords,$page['keywords'],$this->output);
-        $this->output = str_replace($this::template,$this->current_template,$this->output);
-        $this->output = str_replace($this::title,$page['title'],$this->output);
-        $this->output = str_replace($this::menu,$this->menu,$this->output);
+        array_unshift($this->replace,$this::content,$this::head,$this::canonical,$this::description,$this::keywords,$this::template,$this::title,$this::menu);
+        array_unshift($this->subject,$this->content,$this->head,$this->base_url.$page['name'],$page['description'],$page['keywords'],$this->current_template,$page['title'],$this->menu);
         $this->output = str_replace($this->replace,$this->subject,$this->output);
         if ($this->clean_unused_vars) {
             $this->output = preg_replace('/{[A-Z0-9:]+}/','',$this->output);

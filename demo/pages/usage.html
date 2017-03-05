@@ -4,7 +4,8 @@
 		First of all, we need to define some basic site parameters:
 		<pre class="prettyprint">
 $params["system"] = array(
-	"show_errors" => true,
+	"base_url"          => "http://example.com/",
+	"show_errors"       => true,
 	"clean_unused_vars" => true
 );</pre>
 		Pages:
@@ -14,11 +15,11 @@ $params["system"] = array(
 
 $params["pages"] = array(
 	array(
-		"path" => "pages/main.html",
+		"path"  => "pages/main.html",
 		"title" => "main page"
 	),
 	array(
-		"path" => "pages/sec.html",
+		"path"  => "pages/sec.html",
 		"title" => "second page"
 	)
 );</pre>
@@ -29,13 +30,16 @@ $params["pages"] = array(
 
 // it can contain the following variables:
 // {VODKA&#058;HEAD} - where to append head tags
+// {VODKA&#058;CANONICAL} - where to put canonical URL
+// {VODKA&#058;DESCRIPTION} - where to put meta description
+// {VODKA&#058;KEYWORDS} - where to put meta keywords
 // {VODKA&#058;MENU} - where to place the generated menu
 // {VODKA&#058;CONTENT} - loaded page content
 // {VODKA&#058;TITLE} - page title
 // {VODKA&#058;TEMPLATE} - template path (if needed)
 
 $params["templates"] = array(
-	"demo" => "tpl/demo"
+	"mytemplate" => "tpl/mytemplate"
 );</pre>
 		And a basic menu:
 		<pre class="prettyprint">
@@ -54,7 +58,7 @@ require "vodka.class.php";
 $vodka = new vodka($params);</pre>
 		After that we will load the template and the page, build the menu and then output the generated page:
 		<pre class="prettyprint">
-$vodka->loadTemplate("demo");
+$vodka->loadTemplate("mytemplate");
 $vodka->loadCurrentPage();
 $vodka->buildCurrentMenu();
 $vodka->buildCurrentPage();</pre>
