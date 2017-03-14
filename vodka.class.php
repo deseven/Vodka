@@ -1,7 +1,7 @@
 <?php
 
 /*
-* Vodka rev.11
+* Vodka rev.12
 * written by deseven
 * website: http://deseven.info
 */
@@ -26,7 +26,7 @@ if (!function_exists('mb_pathinfo')) {
 
 class vodka {
 
-    const rev = 11;
+    const rev = 12;
 
     const head = '{VODKA:HEAD}';
     const canonical = '{VODKA:CANONICAL}';
@@ -220,7 +220,6 @@ class vodka {
         foreach ($this->pages as &$page) {
             if (($page['name'].'/' == $this->uri) || ($page['name'] == $this->uri.'/')) {
                 $_SERVER['REQUEST_URI'] = str_replace($this->uri,$page['name'],urldecode($_SERVER['REQUEST_URI']));
-                //echo "replacing ".$this->uri." with ".$page['name']." in ".$_SERVER['REQUEST_URI'];
                 //echo "will redirect to ".$_SERVER['REQUEST_URI'];
                 header('Location: '.$_SERVER['REQUEST_URI'],true,301);
                 exit;
@@ -366,10 +365,11 @@ class vodka {
                     $cur_item = str_replace($this::cclass,'',$cur_item);
                 }
                 $cur_item = str_replace($this::name,$this->pages[$i]['name'],$cur_item);
+
                 if (dirname($_SERVER['PHP_SELF']) != '/') {
-                    $cur_item = str_replace($this::url,htmlspecialchars(dirname($_SERVER['PHP_SELF'])).'/'.$this->pages[$i]['name'],$cur_item);
+                    $cur_item = str_replace($this::url,htmlspecialchars(dirname($_SERVER['PHP_SELF'])).'/'.($this->pages[$i]['name'] == $this->main_page ? '' : $this->pages[$i]['name']),$cur_item);
                 } else {
-                    $cur_item = str_replace($this::url,'/'.$this->pages[$i]['name'],$cur_item);
+                    $cur_item = str_replace($this::url,'/'.($this->pages[$i]['name'] == $this->main_page ? '' : $this->pages[$i]['name']),$cur_item);
                 }
                 $cur_item = str_replace($this::title,$this->pages[$i]['title'],$cur_item);
                 $this->menu .= $cur_item;
@@ -396,7 +396,7 @@ class vodka {
             }
         }
         array_unshift($this->replace,$this::content,$this::head,$this::canonical,$this::description,$this::keywords,$this::template,$this::title,$this::menu);
-        array_unshift($this->subject,$this->content,$this->head,$this->base_url.$page['name'],$page['description'],$page['keywords'],$this->current_template,$page['title'],$this->menu);
+        array_unshift($this->subject,$this->content,$this->head,$this->base_url.($page['name'] == $this->main_page ? '' : $page['name']),$page['description'],$page['keywords'],$this->current_template,$page['title'],$this->menu);
         $this->output = str_replace($this->replace,$this->subject,$this->output);
         if ($this->clean_unused_vars) {
             $this->output = preg_replace('/{[A-Z0-9:]+}/','',$this->output);
