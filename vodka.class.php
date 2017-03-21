@@ -1,32 +1,13 @@
 <?php
 
-/*
-* Vodka rev.12
-* written by deseven
-* website: http://deseven.info
+/**
+* @version rev.13
+* @author deseven
+* @link https://github.com/deseven/vodka
 */
-
-if (!function_exists('mb_pathinfo')) {
-    function mb_pathinfo($path, $opt = '') {
-        $separator = ' qq ';
-        $path = preg_replace('/[^ ]/u', $separator."\$0".$separator, $path);
-        if ($opt == '') $pathinfo = pathinfo($path);
-        else $pathinfo = pathinfo($path, $opt);
-
-        if (is_array($pathinfo)) {
-            $pathinfo2 = $pathinfo;
-            foreach($pathinfo2 as $key => $val) {
-                $pathinfo[$key] = str_replace($separator, '', $val);
-            }
-        }
-        else if (is_string($pathinfo)) $pathinfo = str_replace($separator, '', $pathinfo);
-        return $pathinfo;
-    }
-}
-
 class vodka {
 
-    const rev = 12;
+    const rev = 13;
 
     const head = '{VODKA:HEAD}';
     const canonical = '{VODKA:CANONICAL}';
@@ -42,14 +23,14 @@ class vodka {
 
     protected $base_url;
     protected $root;
-    protected $show_errors;
-    protected $forbid_scriptname;
+    protected $show_errors = true;
+    protected $forbid_scriptname = true;
     protected $clean_unused_vars;
     protected $auto_pages;
     protected $main_page;
     protected $notfound_page;
     protected $pages;
-    protected $menus;
+    protected $menu;
     protected $templates;
     protected $aliases;
 
@@ -62,8 +43,8 @@ class vodka {
     protected $page_built;
     protected $output;
 
-    protected $head;
-    protected $menu;
+    protected $built_head;
+    protected $built_menu;
 
     protected $uri;
 
@@ -82,10 +63,31 @@ class vodka {
         }
     }
 
+    private function _pathinfo($path,$opt = '') {
+        $separator = ' qq ';
+        $path = preg_replace('/[^ ]/u',$separator."\$0".$separator,$path);
+        if ($opt == '') $pathinfo = pathinfo($path);
+        else $pathinfo = pathinfo($path,$opt);
+        if (is_array($pathinfo)) {
+            $pathinfo2 = $pathinfo;
+            foreach($pathinfo2 as $key => $val) {
+                $pathinfo[$key] = str_replace($separator,'',$val);
+            }
+        }
+        else if (is_string($pathinfo)) $pathinfo = str_replace($separator,'',$pathinfo);
+        return $pathinfo;
+    }
+
+    /**
+    * Engine initialization.
+    *
+    * *Keep in mind that all internal redirects are handled here.*
+    *
+    * @param array $params Array with engine parameters. Check `config.php` from demo sources or github wiki to get full list of parameters.
+    * @return boolean `true` if everything is ok, `false` otherwise.
+    */
     function __construct($params) {
         $this->start_time = microtime(true);
-
-        $this->show_errors = true;
 
         if (!isset($params)) {
             $this->printError('no params defined.');
@@ -132,8 +134,10 @@ class vodka {
             $this->auto_pages = $params['system']['auto_pages'];
         }
 
-        if (isset($params['menus'])) {
-            $this->menus = $params['menus'];    
+        if (isset($params['menu'])) {
+            $this->menu = $params['menu'];
+        } elseif (isset($params['menus'])) { // compatibility with an old format
+            $this->menu = $params['menus'];
         }
 
         if (!isset($params['templates'])) {
@@ -156,7 +160,7 @@ class vodka {
                 return false;
             }
             if (!isset($page['name'])) {
-                $page['name'] = mb_pathinfo($page['path'],PATHINFO_FILENAME);
+                $page['name'] = $this->_pathinfo($page['path'],PATHINFO_FILENAME);
             }
             if (!isset($page['title'])) {
                 $page['title'] = $page['name'];
@@ -181,8 +185,8 @@ class vodka {
                 if ($add) {
                     $this->pages[] = array(
                         'path' => $file,
-                        'title' => mb_pathinfo($file,PATHINFO_FILENAME),
-                        'name' => mb_pathinfo($file,PATHINFO_FILENAME)
+                        'title' => $this->_pathinfo($file,PATHINFO_FILENAME),
+                        'name' => $this->_pathinfo($file,PATHINFO_FILENAME)
                     );
                 }
             }
@@ -238,10 +242,21 @@ class vodka {
         }
     }
 
+    /**
+    * Return vodka start time.
+    *
+    * @return int Number of microseconds.
+    */
     public function getStartTime() {
         return $this->start_time;
     }
 
+    /**
+    * Loads template by its name.
+    *
+    * @param string $name Name of desired template.
+    * @return boolean `true` if everything is ok, `false` otherwise.
+    */
     public function loadTemplate($name) {
         $this->page_built = false;
         if (isset($this->templates[$name])) {
@@ -264,6 +279,33 @@ class vodka {
         return true;
     }
 
+    /**
+    * Returns page by its name or alias.
+    *
+    * @param string $name Name of desired page.
+    * @return mixed `array` with a page or `false`.
+    */
+    public function getPageByName($name) {
+        if (isset($this->aliases[$name])) {
+            foreach ($this->pages as $page) {
+                if ($page['name'] == $this->aliases[$name]) {
+                    return $page;
+                }
+            }
+        }
+        foreach ($this->pages as $page) {
+            if ($page['name'] == $name) {
+                return $page;
+            }
+        }
+        return false;
+    }
+
+    /**
+    * Returns current page.
+    *
+    * @return mixed `array` with current page or `false`.
+    */
     public function getCurrentPage() {
         if (is_array($this->current_page)) {
             return $this->current_page;
@@ -307,21 +349,32 @@ class vodka {
         return false;
     }
 
-    public function appendHead($string) {
-        $this->head .= $string;
-        return true;
-    }
-
+    /**
+    * Loads current page.
+    *
+    * @return boolean `true` if everything is ok, `false` otherwise.
+    */
     public function loadCurrentPage() {
         return $this->loadPage($this->getCurrentPage());
     }
 
-    public function loadPage($page = null) {
+    /**
+    * Loads specified page.
+    *
+    * @param mixed $page Array with page or page name.
+    * @return boolean `true` if everything is ok, `false` otherwise.
+    */
+    public function loadPage($page) {
+        $this->content = '';
         $this->page_built = false;
-        if ($page === null) {
-            $this->printError('page not defined.');
-            return false;
-        } elseif (isset($page['path'])) {
+        if (!is_array($page)) {
+            $page = $this->getPageByName($page);
+            if (!is_array($page)) {
+                $this->printError('page not defined.');
+                return false;
+            }
+        }
+        if (isset($page['path'])) {
             if (file_exists($this->root.'/'.$page['path'])) {
                 $this->content = file_get_contents($this->root.'/'.$page['path']);
                 return true;
@@ -333,32 +386,48 @@ class vodka {
             $this->printError('page not defined.');
             return false;
         }
-        return false;
     }
 
+    /**
+    * Builds current menu.
+    *
+    * @return boolean `true` if everything is ok, `false` otherwise.
+    */
     public function buildCurrentMenu() {
         return $this->buildMenu($this->getCurrentPage());
     }
 
-    public function buildMenu($page = null) {
-        if ($page === null) {
-            $this->printError('page not defined.');
+    /**
+    * Builds menu for specified page.
+    *
+    * @param mixed $page Array with page or page name.
+    * @return boolean `true` if everything is ok, `false` otherwise.
+    */
+    public function buildMenu($page) {
+        if (!is_array($this->menu)) {
             return false;
         }
+        if (!is_array($page)) {
+            $page = $this->getPageByName($page);
+            if (!is_array($page)) {
+                $this->printError('page not defined.');
+                return false;
+            }
+        }
         for ($i = 0;$i < count($this->pages);$i++) {
-            $cur_item = $this->menus['html'];
+            $cur_item = $this->menu['html'];
             $visible = true;
             if (isset($this->pages[$i]['visible'])) {
                 $visible = $this->pages[$i]['visible'];
             }
             if ($visible) {
-                if (($this->pages[$i]['name'] == $page['name']) && isset($this->menus['selected_class'])) {
-                    $replace = $this->menus['selected_class'];
-                    if (($i == 0) && (isset($this->menus['selected_class_first']))) {
-                        $replace .= ' '.$this->menus['selected_class_first'];
+                if (($this->pages[$i]['name'] == $page['name']) && isset($this->menu['selected_class'])) {
+                    $replace = $this->menu['selected_class'];
+                    if (($i == 0) && (isset($this->menu['selected_class_first']))) {
+                        $replace .= ' '.$this->menu['selected_class_first'];
                     }
-                    if (($i == count($this->pages) - 1) && (isset($this->menus['selected_class_last']))) {
-                        $replace .= ' '.$this->menus['selected_class_last'];    
+                    if (($i == count($this->pages) - 1) && (isset($this->menu['selected_class_last']))) {
+                        $replace .= ' '.$this->menu['selected_class_last'];    
                     }
                     $cur_item = str_replace($this::cclass,$replace,$cur_item);
                 } else {
@@ -372,31 +441,53 @@ class vodka {
                     $cur_item = str_replace($this::url,'/'.($this->pages[$i]['name'] == $this->main_page ? '' : $this->pages[$i]['name']),$cur_item);
                 }
                 $cur_item = str_replace($this::title,$this->pages[$i]['title'],$cur_item);
-                $this->menu .= $cur_item;
+                $this->built_menu .= $cur_item;
             }
         }
+        return true;
     }
 
+    /**
+    * Builds current page.
+    *
+    * @return boolean `true` if everything is ok, `false` otherwise.
+    */
     public function buildCurrentPage() {
         return $this->buildPage($this->getCurrentPage());
     }
 
-    public function buildPage($page = null) {
-        if ($page === null) {
-            $this->printError('page not defined.');
-            return false;
+    /**
+    * Builds specified page.
+    *
+    * @param mixed $page Array with page or page name.
+    * @return boolean `true` if everything is ok, `false` otherwise.
+    */
+    public function buildPage($page) {
+        if (!is_array($page)) {
+            $page = $this->getPageByName($page);
+            if (!is_array($page)) {
+                $this->printError('page not defined.');
+                return false;
+            }
         }
         $this->output = $this->template;
         if (isset($page['custom'])) {
             $page['custom'] = array_reverse($page['custom']);
             while ($custom = current($page['custom'])) {
-                array_unshift($this->replace,key($page['custom']));
+                $var = key($page['custom']);
+                if (substr($var,0,1) != '{') {
+                    $var = '{'.$var;
+                }
+                if (substr($var,-1) != '}') {
+                    $var .= "}";
+                }
+                array_unshift($this->replace,$var);
                 array_unshift($this->subject,$page['custom'][key($page['custom'])]);
                 next($page['custom']);
             }
         }
         array_unshift($this->replace,$this::content,$this::head,$this::canonical,$this::description,$this::keywords,$this::template,$this::title,$this::menu);
-        array_unshift($this->subject,$this->content,$this->head,$this->base_url.($page['name'] == $this->main_page ? '' : $page['name']),$page['description'],$page['keywords'],$this->current_template,$page['title'],$this->menu);
+        array_unshift($this->subject,$this->content,$this->built_head,$this->base_url.($page['name'] == $this->main_page ? '' : $page['name']),$page['description'],$page['keywords'],$this->current_template,$page['title'],$this->built_menu);
         $this->output = str_replace($this->replace,$this->subject,$this->output);
         if ($this->clean_unused_vars) {
             $this->output = preg_replace('/{[A-Z0-9:]+}/','',$this->output);
@@ -409,11 +500,42 @@ class vodka {
         return true;
     }
 
+    /**
+    * Replaces variable (string encapsulated in curly braces) in page.
+    * 
+    * *Please note that this function doesn't modify the output directly, call `buildPage()` to apply your actions.*
+    *
+    * @param string $var
+    * @param string $string
+    * @return boolean Always `true`.
+    * @example `$vodka->replaceVar('VAR','value');`
+    */
     public function replaceVar($var,$string = null) {
+        if (substr($var,0,1) != '{') {
+            $var = '{'.$var;
+        }
+        if (substr($var,-1) != '}') {
+            $var .= "}";
+        }
         $this->replace[] = $var;
         $this->subject[] = $string;
         return true;
     }
+
+    /**
+    * Appends something to the `{VODKA:HEAD}` part of the template.
+    * 
+    * *Please note that this function doesn't modify the output directly, call `buildPage()` to apply your actions.*
+    *
+    * @param string $string
+    * @return boolean Always `true`.
+    * @example `$vodka->appendHead('<meta name="robots" content="all">');`
+    */
+    public function appendHead($string) {
+        $this->built_head .= $string;
+        return true;
+    }
+
 }
 
 ?>
