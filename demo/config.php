@@ -30,7 +30,7 @@ $params["pages"] = array(
 		"path"        => "pages/main.html",
 		"title"       => "main page",
 		"description" => "main page of this site",
-		"keywords"    => "vodka, php, site engine, lightweight, flat-file",
+		"keywords"    => "vodka, php, site engine, lightweight, flat-file, seo-friendly",
 		"custom"      => array(
 			"GREETING"  => 'Hello, this is a demo site of Vodka, simple and tiny flat-file engine, written in PHP. You can <a href="{URL}">grab the latest version on github</a>.',
 			"URL"       => "https://github.com/deseven/vodka/"
@@ -45,26 +45,32 @@ $params["pages"] = array(
 		"path"        => "pages/third.html",
 		"title"       => "third page"
 	),
+		array(
+		"path"        => "pages/form.html",
+		"title"       => "form test"
+	),
 	array(
-		"path"        => "pages/usage.html",
-		"title"       => "basic usage"
+		"path"        => "pages/form-result.html",
+		"name"        => "form/result",
+		"title"       => "form result",
+		"visible"     => false
+	),
+	array(
+		"path"        => "pages/utf8.html",
+		"name"        => "utf8test",
+		"title"       => "utf8 test"
 	),
 	array(
 		"path"        => "pages/404.html",
 		"title"       => "404",
-		"visible"     => false
-	),
-	array(
-		"path"        => "pages/sec.html",
-		"title"       => "long path test",
-		"name"        => "long/path/test/",
 		"visible"     => false
 	)
 );
 
 $params["aliases"] = array(
 	"other_page"                   => "third",
-	"i=like&to=use&some=variables" => "second"
+	"i=like&to=use&some=variables" => "second",
+	"абвгд đšćčž ћђљњ"             => "utf8test"
 );
 
 ?>

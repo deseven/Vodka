@@ -18,6 +18,7 @@ class vodka {
     const title = '{VODKA:TITLE}';
     const template = '{VODKA:TEMPLATE}';
     const url = '{VODKA:URL}';
+    const baseurl = '{VODKA:BASEURL}';
     const name = '{VODKA:NAME}';
     const cclass = '{VODKA:CLASS}';
 
@@ -486,8 +487,8 @@ class vodka {
                 next($page['custom']);
             }
         }
-        array_unshift($this->replace,$this::content,$this::head,$this::canonical,$this::description,$this::keywords,$this::template,$this::title,$this::menu);
-        array_unshift($this->subject,$this->content,$this->built_head,$this->base_url.($page['name'] == $this->main_page ? '' : $page['name']),$page['description'],$page['keywords'],$this->current_template,$page['title'],$this->built_menu);
+        array_unshift($this->replace,$this::content,$this::head,$this::canonical,$this::description,$this::keywords,$this::template,$this::title,$this::menu,$this::baseurl);
+        array_unshift($this->subject,$this->content,$this->built_head,$this->base_url.($page['name'] == $this->main_page ? '' : $page['name']),$page['description'],$page['keywords'],$this->current_template,$page['title'],$this->built_menu,$this->base_url);
         $this->output = str_replace($this->replace,$this->subject,$this->output);
         if ($this->clean_unused_vars) {
             $this->output = preg_replace('/{[A-Z0-9:]+}/','',$this->output);
