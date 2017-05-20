@@ -1,13 +1,13 @@
 <?php
 
 /**
-* @version rev.13
+* @version rev.14
 * @author deseven
 * @link https://github.com/deseven/vodka
 */
 class vodka {
 
-    const rev = 13;
+    const rev = 14;
 
     const head = '{VODKA:HEAD}';
     const canonical = '{VODKA:CANONICAL}';
@@ -196,14 +196,22 @@ class vodka {
         $this->templates = $params['templates'];
 
         $this->uri = urldecode($_SERVER['REQUEST_URI']);
-        $this->uri = str_replace(basename($_SERVER['PHP_SELF']),'',$this->uri);
+        $pos = strpos($this->uri,basename($_SERVER['PHP_SELF']));
+        if ($pos !== false) {
+            $this->uri = substr_replace($this->uri,'',$pos,strlen(basename($_SERVER['PHP_SELF'])));
+        }
+        $pos = strpos($this->uri,dirname($_SERVER['PHP_SELF']));
+        if ($pos !== false) {
+            $this->uri = substr_replace($this->uri,'',$pos,strlen(dirname($_SERVER['PHP_SELF'])));
+        }
+        $this->uri = preg_replace('~/{2,}~','/',$this->uri);
         $this->uri = ltrim($this->uri,'/');
         $this->uri = explode('?',$this->uri);
         $this->uri = $this->uri[0];
 
         if ($this->forbid_scriptname) {
             if (strpos($_SERVER['REQUEST_URI'],$_SERVER['PHP_SELF']) === 0) {
-                $_SERVER['REQUEST_URI'] = str_replace($_SERVER['PHP_SELF'],dirname($_SERVER['PHP_SELF']),$_SERVER['REQUEST_URI']);
+                $_SERVER['REQUEST_URI'] = str_replace($_SERVER['PHP_SELF'],'',$_SERVER['REQUEST_URI']);
                 $_SERVER['REQUEST_URI'] = preg_replace('~/{2,}~','/',$_SERVER['REQUEST_URI']);
                 //echo "will redirect to ".rtrim($this->base_url,'/').$_SERVER['REQUEST_URI'];
                 header('Location: '.rtrim($this->base_url,'/').$_SERVER['REQUEST_URI'],true,301);
@@ -213,7 +221,7 @@ class vodka {
 
         if ($this->main_page) {
             if ($this->uri == $this->main_page) {
-                $_SERVER['REQUEST_URI'] = str_replace($_SERVER['PHP_SELF'],dirname($_SERVER['PHP_SELF']),$_SERVER['REQUEST_URI']);
+                $_SERVER['REQUEST_URI'] = str_replace($_SERVER['PHP_SELF'],'',$_SERVER['REQUEST_URI']);
                 $_SERVER['REQUEST_URI'] = preg_replace('~/{2,}~','/',$_SERVER['REQUEST_URI']);
                 $_SERVER['REQUEST_URI'] = str_replace($this->main_page,'',$_SERVER['REQUEST_URI']);
                 //echo "will redirect to ".rtrim($this->base_url,'/').$_SERVER['REQUEST_URI'];
