@@ -1,0 +1,1602 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+
+	<title>Class vodka</title>
+
+	<link rel="stylesheet" href="resources/style.css?e99947befd7bf673c6b43ff75e9e0f170c88a60e">
+
+</head>
+
+<body>
+<div id="left">
+	<div id="menu">
+		<a href="index.html" title="Overview"><span>Overview</span></a>
+
+
+		<div id="groups">
+		</div>
+
+
+
+		<div id="elements">
+			<h3>Classes</h3>
+			<ul>
+				<li class="active"><a href="class-vodka.html">vodka</a></li>
+			</ul>
+
+
+
+
+
+		</div>
+	</div>
+</div>
+
+<div id="splitter"></div>
+
+<div id="right">
+<div id="rightInner">
+	<form id="search">
+		<input type="hidden" name="cx" value="">
+		<input type="hidden" name="ie" value="UTF-8">
+		<input type="text" name="q" class="text" placeholder="Search">
+	</form>
+
+	<div id="navigation">
+		<ul>
+			<li>
+				<a href="index.html" title="Overview"><span>Overview</span></a>
+			</li>
+			<li class="active">
+<span>Class</span>			</li>
+		</ul>
+		<ul>
+		</ul>
+		<ul>
+		</ul>
+	</div>
+
+<div id="content" class="class">
+	<h1>Class vodka</h1>
+
+
+
+
+
+
+
+
+
+
+
+	<div class="info">
+		
+		
+		
+		
+
+				<b>Author:</b>
+				deseven<br>
+				<b>Version:</b>
+				1.0.0<br>
+				<b>Link:</b>
+				<a href="https://github.com/deseven/vodka">https://github.com/deseven/vodka</a><br>
+			<b>Located at</b> <a href="source-class-vodka.html#3-600" title="Go to source code"></a>
+		<br>
+	</div>
+
+
+
+	<table class="summary methods" id="methods">
+	<caption>Methods summary</caption>
+	<tr data-order="__construct" id="___construct">
+
+		<td class="attributes"><code>
+			 public 
+
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#___construct">#</a>
+		<code><a href="source-class-vodka.html#83-256" title="Go to source code">__construct</a>( <span>array <var>$params</var></span> )</code>
+
+		<div class="description short">
+			<p>Engine initialization.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Engine initialization.</p>
+
+<p><em>Keep in mind that all internal redirects are handled here.</em></p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$params</var></dt>
+					<dd>Array with engine parameters. Check <code>config.php</code> from demo sources or github wiki to get full list of parameters.</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					boolean<br><code>true</code> if everything is ok, <code>false</code> otherwise.
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getStartTime" id="_getStartTime">
+
+		<td class="attributes"><code>
+			 public 
+
+			integer
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getStartTime">#</a>
+		<code><a href="source-class-vodka.html#258-265" title="Go to source code">getStartTime</a>( )</code>
+
+		<div class="description short">
+			<p>Return vodka start time.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Return vodka start time.</p>
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					integer<br>Number of microseconds.
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="loadTemplate" id="_loadTemplate">
+
+		<td class="attributes"><code>
+			 public 
+
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_loadTemplate">#</a>
+		<code><a href="source-class-vodka.html#267-293" title="Go to source code">loadTemplate</a>( <span>string <var>$name</var></span> )</code>
+
+		<div class="description short">
+			<p>Loads template by its name.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Loads template by its name.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$name</var></dt>
+					<dd>Name of desired template.</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					boolean<br><code>true</code> if everything is ok, <code>false</code> otherwise.
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getPageByName" id="_getPageByName">
+
+		<td class="attributes"><code>
+			 public 
+
+			mixed
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getPageByName">#</a>
+		<code><a href="source-class-vodka.html#295-315" title="Go to source code">getPageByName</a>( <span>string <var>$name</var></span> )</code>
+
+		<div class="description short">
+			<p>Returns page by its name or alias.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Returns page by its name or alias.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$name</var></dt>
+					<dd>Name of desired page.</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					mixed<br><code>array</code> with a page or <code>false</code>.
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getCurrentPage" id="_getCurrentPage">
+
+		<td class="attributes"><code>
+			 public 
+
+			mixed
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getCurrentPage">#</a>
+		<code><a href="source-class-vodka.html#317-363" title="Go to source code">getCurrentPage</a>( )</code>
+
+		<div class="description short">
+			<p>Returns current page.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Returns current page.</p>
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					mixed<br><code>array</code> with current page or <code>false</code>.
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="loadCurrentPage" id="_loadCurrentPage">
+
+		<td class="attributes"><code>
+			 public 
+
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_loadCurrentPage">#</a>
+		<code><a href="source-class-vodka.html#365-372" title="Go to source code">loadCurrentPage</a>( )</code>
+
+		<div class="description short">
+			<p>Loads current page.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Loads current page.</p>
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					boolean<br><code>true</code> if everything is ok, <code>false</code> otherwise.
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="loadPage" id="_loadPage">
+
+		<td class="attributes"><code>
+			 public 
+
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_loadPage">#</a>
+		<code><a href="source-class-vodka.html#374-402" title="Go to source code">loadPage</a>( <span>mixed <var>$page</var></span> )</code>
+
+		<div class="description short">
+			<p>Loads specified page.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Loads specified page.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$page</var></dt>
+					<dd>Array with page or page name.</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					boolean<br><code>true</code> if everything is ok, <code>false</code> otherwise.
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getPageURL" id="_getPageURL">
+
+		<td class="attributes"><code>
+			 public 
+
+			string
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getPageURL">#</a>
+		<code><a href="source-class-vodka.html#404-424" title="Go to source code">getPageURL</a>( <span>mixed <var>$page</var></span> )</code>
+
+		<div class="description short">
+			<p>Get specified page url.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Get specified page url.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$page</var></dt>
+					<dd>Array with page or page name.</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					string<br>$url Canonical URL of the page.
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="buildCurrentMenu" id="_buildCurrentMenu">
+
+		<td class="attributes"><code>
+			 public 
+
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_buildCurrentMenu">#</a>
+		<code><a href="source-class-vodka.html#426-433" title="Go to source code">buildCurrentMenu</a>( )</code>
+
+		<div class="description short">
+			<p>Builds current menu.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Builds current menu.</p>
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					boolean<br><code>true</code> if everything is ok, <code>false</code> otherwise.
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="buildMenu" id="_buildMenu">
+
+		<td class="attributes"><code>
+			 public 
+
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_buildMenu">#</a>
+		<code><a href="source-class-vodka.html#435-483" title="Go to source code">buildMenu</a>( <span>mixed <var>$page</var></span> )</code>
+
+		<div class="description short">
+			<p>Builds menu for specified page.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Builds menu for specified page.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$page</var></dt>
+					<dd>Array with page or page name.</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					boolean<br><code>true</code> if everything is ok, <code>false</code> otherwise.
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="buildCurrentPage" id="_buildCurrentPage">
+
+		<td class="attributes"><code>
+			 public 
+
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_buildCurrentPage">#</a>
+		<code><a href="source-class-vodka.html#485-492" title="Go to source code">buildCurrentPage</a>( )</code>
+
+		<div class="description short">
+			<p>Builds current page.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Builds current page.</p>
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					boolean<br><code>true</code> if everything is ok, <code>false</code> otherwise.
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="buildPage" id="_buildPage">
+
+		<td class="attributes"><code>
+			 public 
+
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_buildPage">#</a>
+		<code><a href="source-class-vodka.html#494-562" title="Go to source code">buildPage</a>( <span>mixed <var>$page</var></span> )</code>
+
+		<div class="description short">
+			<p>Builds specified page.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Builds specified page.</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$page</var></dt>
+					<dd>Array with page or page name.</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					boolean<br><code>true</code> if everything is ok, <code>false</code> otherwise.
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="replaceVar" id="_replaceVar">
+
+		<td class="attributes"><code>
+			 public 
+
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_replaceVar">#</a>
+		<code><a href="source-class-vodka.html#564-584" title="Go to source code">replaceVar</a>( <span>string <var>$var</var></span>, <span>string <var>$string</var> = <span class="php-keyword1">null</span></span> )</code>
+
+		<div class="description short">
+			<p>Replaces variable (string encapsulated in curly braces) in page.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Replaces variable (string encapsulated in curly braces) in page.</p>
+
+<p><em>Please note that this function doesn't modify the output directly, call <code>buildPage()</code> to apply your actions.</em></p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$var</var></dt>
+					<dd></dd>
+					<dt><var>$string</var></dt>
+					<dd></dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					boolean<br>Always <code>true</code>.
+				</div>
+
+
+				<h4>Example</h4>
+				<div class="list">
+						<code>$vodka-&gt;replaceVar('VAR','value');</code><br>
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="appendHead" id="_appendHead">
+
+		<td class="attributes"><code>
+			 public 
+
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_appendHead">#</a>
+		<code><a href="source-class-vodka.html#586-598" title="Go to source code">appendHead</a>( <span>string <var>$string</var></span> )</code>
+
+		<div class="description short">
+			<p>Appends $string to the <code>{VODKA:HEAD}</code> part of the template.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Appends $string to the <code>{VODKA:HEAD}</code> part of the template.</p>
+
+<p><em>Please note that this function doesn't modify the output directly, call <code>buildPage()</code> to apply your actions.</em></p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$string</var></dt>
+					<dd></dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					boolean<br>Always <code>true</code>.
+				</div>
+
+
+				<h4>Example</h4>
+				<div class="list">
+						<code>$vodka-&gt;appendHead('&lt;meta name="robots" content="all"&gt;');</code><br>
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	</table>
+
+
+
+
+
+
+
+
+	<table class="summary constants" id="constants">
+	<caption>Constants summary</caption>
+	<tr data-order="ver" id="ver">
+
+		<td class="attributes"><code>string</code></td>
+		<td class="name">
+			<code>
+				<a href="source-class-vodka.html#10" title="Go to source code"><b>ver</b></a>
+			</code>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#ver" class="anchor">#</a>
+				<code><span class="php-quote">'1.0.0'</span></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="rev" id="rev">
+
+		<td class="attributes"><code>integer</code></td>
+		<td class="name">
+			<code>
+				<a href="source-class-vodka.html#11" title="Go to source code"><b>rev</b></a>
+			</code>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#rev" class="anchor">#</a>
+				<code><span class="php-num">100</span></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="head" id="head">
+
+		<td class="attributes"><code>string</code></td>
+		<td class="name">
+			<code>
+				<a href="source-class-vodka.html#13" title="Go to source code"><b>head</b></a>
+			</code>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#head" class="anchor">#</a>
+				<code><span class="php-quote">'{VODKA:HEAD}'</span></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="canonical" id="canonical">
+
+		<td class="attributes"><code>string</code></td>
+		<td class="name">
+			<code>
+				<a href="source-class-vodka.html#14" title="Go to source code"><b>canonical</b></a>
+			</code>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#canonical" class="anchor">#</a>
+				<code><span class="php-quote">'{VODKA:CANONICAL}'</span></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="description" id="description">
+
+		<td class="attributes"><code>string</code></td>
+		<td class="name">
+			<code>
+				<a href="source-class-vodka.html#15" title="Go to source code"><b>description</b></a>
+			</code>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#description" class="anchor">#</a>
+				<code><span class="php-quote">'{VODKA:DESCRIPTION}'</span></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="keywords" id="keywords">
+
+		<td class="attributes"><code>string</code></td>
+		<td class="name">
+			<code>
+				<a href="source-class-vodka.html#16" title="Go to source code"><b>keywords</b></a>
+			</code>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#keywords" class="anchor">#</a>
+				<code><span class="php-quote">'{VODKA:KEYWORDS}'</span></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="menu" id="menu">
+
+		<td class="attributes"><code>string</code></td>
+		<td class="name">
+			<code>
+				<a href="source-class-vodka.html#17" title="Go to source code"><b>menu</b></a>
+			</code>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#menu" class="anchor">#</a>
+				<code><span class="php-quote">'{VODKA:MENU}'</span></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="content" id="content">
+
+		<td class="attributes"><code>string</code></td>
+		<td class="name">
+			<code>
+				<a href="source-class-vodka.html#18" title="Go to source code"><b>content</b></a>
+			</code>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#content" class="anchor">#</a>
+				<code><span class="php-quote">'{VODKA:CONTENT}'</span></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="title" id="title">
+
+		<td class="attributes"><code>string</code></td>
+		<td class="name">
+			<code>
+				<a href="source-class-vodka.html#19" title="Go to source code"><b>title</b></a>
+			</code>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#title" class="anchor">#</a>
+				<code><span class="php-quote">'{VODKA:TITLE}'</span></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="template" id="template">
+
+		<td class="attributes"><code>string</code></td>
+		<td class="name">
+			<code>
+				<a href="source-class-vodka.html#20" title="Go to source code"><b>template</b></a>
+			</code>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#template" class="anchor">#</a>
+				<code><span class="php-quote">'{VODKA:TEMPLATE}'</span></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="url" id="url">
+
+		<td class="attributes"><code>string</code></td>
+		<td class="name">
+			<code>
+				<a href="source-class-vodka.html#21" title="Go to source code"><b>url</b></a>
+			</code>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#url" class="anchor">#</a>
+				<code><span class="php-quote">'{VODKA:URL}'</span></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="baseurl" id="baseurl">
+
+		<td class="attributes"><code>string</code></td>
+		<td class="name">
+			<code>
+				<a href="source-class-vodka.html#22" title="Go to source code"><b>baseurl</b></a>
+			</code>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#baseurl" class="anchor">#</a>
+				<code><span class="php-quote">'{VODKA:BASEURL}'</span></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="name" id="name">
+
+		<td class="attributes"><code>string</code></td>
+		<td class="name">
+			<code>
+				<a href="source-class-vodka.html#23" title="Go to source code"><b>name</b></a>
+			</code>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#name" class="anchor">#</a>
+				<code><span class="php-quote">'{VODKA:NAME}'</span></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="cclass" id="cclass">
+
+		<td class="attributes"><code>string</code></td>
+		<td class="name">
+			<code>
+				<a href="source-class-vodka.html#24" title="Go to source code"><b>cclass</b></a>
+			</code>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#cclass" class="anchor">#</a>
+				<code><span class="php-quote">'{VODKA:CLASS}'</span></code>
+			</div>
+		</td>
+	</tr>
+	</table>
+
+
+
+
+	<table class="summary properties" id="properties">
+	<caption>Properties summary</caption>
+	<tr data-order="base_url" id="$base_url">
+		<td class="attributes"><code>
+			protected  
+			
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-vodka.html#26" title="Go to source code"><var>$base_url</var></a>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#$base_url" class="anchor">#</a>
+				<code></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="root" id="$root">
+		<td class="attributes"><code>
+			protected  
+			
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-vodka.html#27" title="Go to source code"><var>$root</var></a>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#$root" class="anchor">#</a>
+				<code></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="show_errors" id="$show_errors">
+		<td class="attributes"><code>
+			protected  
+			boolean
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-vodka.html#28" title="Go to source code"><var>$show_errors</var></a>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#$show_errors" class="anchor">#</a>
+				<code><span class="php-keyword1">true</span></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="forbid_scriptname" id="$forbid_scriptname">
+		<td class="attributes"><code>
+			protected  
+			boolean
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-vodka.html#29" title="Go to source code"><var>$forbid_scriptname</var></a>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#$forbid_scriptname" class="anchor">#</a>
+				<code><span class="php-keyword1">true</span></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="clean_unused_vars" id="$clean_unused_vars">
+		<td class="attributes"><code>
+			protected  
+			
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-vodka.html#30" title="Go to source code"><var>$clean_unused_vars</var></a>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#$clean_unused_vars" class="anchor">#</a>
+				<code></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="auto_pages" id="$auto_pages">
+		<td class="attributes"><code>
+			protected  
+			
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-vodka.html#31" title="Go to source code"><var>$auto_pages</var></a>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#$auto_pages" class="anchor">#</a>
+				<code></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="main_page" id="$main_page">
+		<td class="attributes"><code>
+			protected  
+			
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-vodka.html#32" title="Go to source code"><var>$main_page</var></a>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#$main_page" class="anchor">#</a>
+				<code></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="notfound_page" id="$notfound_page">
+		<td class="attributes"><code>
+			protected  
+			
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-vodka.html#33" title="Go to source code"><var>$notfound_page</var></a>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#$notfound_page" class="anchor">#</a>
+				<code></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="pages" id="$pages">
+		<td class="attributes"><code>
+			protected  
+			
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-vodka.html#34" title="Go to source code"><var>$pages</var></a>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#$pages" class="anchor">#</a>
+				<code></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="menu" id="$menu">
+		<td class="attributes"><code>
+			protected  
+			
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-vodka.html#35" title="Go to source code"><var>$menu</var></a>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#$menu" class="anchor">#</a>
+				<code></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="templates" id="$templates">
+		<td class="attributes"><code>
+			protected  
+			
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-vodka.html#36" title="Go to source code"><var>$templates</var></a>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#$templates" class="anchor">#</a>
+				<code></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="aliases" id="$aliases">
+		<td class="attributes"><code>
+			protected  
+			
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-vodka.html#37" title="Go to source code"><var>$aliases</var></a>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#$aliases" class="anchor">#</a>
+				<code></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="template" id="$template">
+		<td class="attributes"><code>
+			protected  
+			
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-vodka.html#39" title="Go to source code"><var>$template</var></a>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#$template" class="anchor">#</a>
+				<code></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="content" id="$content">
+		<td class="attributes"><code>
+			protected  
+			
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-vodka.html#40" title="Go to source code"><var>$content</var></a>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#$content" class="anchor">#</a>
+				<code></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="current_page" id="$current_page">
+		<td class="attributes"><code>
+			protected  
+			
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-vodka.html#42" title="Go to source code"><var>$current_page</var></a>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#$current_page" class="anchor">#</a>
+				<code></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="current_template" id="$current_template">
+		<td class="attributes"><code>
+			protected  
+			
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-vodka.html#43" title="Go to source code"><var>$current_template</var></a>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#$current_template" class="anchor">#</a>
+				<code></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="page_built" id="$page_built">
+		<td class="attributes"><code>
+			protected  
+			
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-vodka.html#45" title="Go to source code"><var>$page_built</var></a>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#$page_built" class="anchor">#</a>
+				<code></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="output" id="$output">
+		<td class="attributes"><code>
+			protected  
+			
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-vodka.html#46" title="Go to source code"><var>$output</var></a>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#$output" class="anchor">#</a>
+				<code></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="built_head" id="$built_head">
+		<td class="attributes"><code>
+			protected  
+			
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-vodka.html#48" title="Go to source code"><var>$built_head</var></a>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#$built_head" class="anchor">#</a>
+				<code></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="built_menu" id="$built_menu">
+		<td class="attributes"><code>
+			protected  
+			
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-vodka.html#49" title="Go to source code"><var>$built_menu</var></a>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#$built_menu" class="anchor">#</a>
+				<code></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="uri" id="$uri">
+		<td class="attributes"><code>
+			protected  
+			
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-vodka.html#51" title="Go to source code"><var>$uri</var></a>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#$uri" class="anchor">#</a>
+				<code></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="replace" id="$replace">
+		<td class="attributes"><code>
+			protected  
+			array
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-vodka.html#53" title="Go to source code"><var>$replace</var></a>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#$replace" class="anchor">#</a>
+				<code>[]</code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="subject" id="$subject">
+		<td class="attributes"><code>
+			protected  
+			array
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-vodka.html#54" title="Go to source code"><var>$subject</var></a>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#$subject" class="anchor">#</a>
+				<code>[]</code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="start_time" id="$start_time">
+		<td class="attributes"><code>
+			protected  
+			
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-vodka.html#56" title="Go to source code"><var>$start_time</var></a>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#$start_time" class="anchor">#</a>
+				<code></code>
+			</div>
+		</td>
+	</tr>
+	</table>
+
+
+
+
+
+
+</div>
+
+	<div id="footer">
+		 API documentation generated by <a href="http://apigen.org">ApiGen</a>
+	</div>
+</div>
+</div>
+<script src="resources/combined.js"></script>
+<script src="elementlist.js"></script>
+</body>
+</html>
