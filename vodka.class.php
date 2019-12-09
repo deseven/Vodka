@@ -1,26 +1,27 @@
 <?php
 
 /**
-* @version rev.14
+* @version 1.0.0
 * @author deseven
 * @link https://github.com/deseven/vodka
 */
 class vodka {
 
-    const rev = 14;
+    const ver = '1.0.0';
+    const rev = 100; // compatibility with older versions
 
-    const head = '{VODKA:HEAD}';
-    const canonical = '{VODKA:CANONICAL}';
+    const head        = '{VODKA:HEAD}';
+    const canonical   = '{VODKA:CANONICAL}';
     const description = '{VODKA:DESCRIPTION}';
-    const keywords = '{VODKA:KEYWORDS}';
-    const menu = '{VODKA:MENU}';
-    const content = '{VODKA:CONTENT}';
-    const title = '{VODKA:TITLE}';
-    const template = '{VODKA:TEMPLATE}';
-    const url = '{VODKA:URL}';
-    const baseurl = '{VODKA:BASEURL}';
-    const name = '{VODKA:NAME}';
-    const cclass = '{VODKA:CLASS}';
+    const keywords    = '{VODKA:KEYWORDS}';
+    const menu        = '{VODKA:MENU}';
+    const content     = '{VODKA:CONTENT}';
+    const title       = '{VODKA:TITLE}';
+    const template    = '{VODKA:TEMPLATE}';
+    const url         = '{VODKA:URL}';
+    const baseurl     = '{VODKA:BASEURL}';
+    const name        = '{VODKA:NAME}';
+    const cclass      = '{VODKA:CLASS}';
 
     protected $base_url;
     protected $root;
@@ -49,14 +50,14 @@ class vodka {
 
     protected $uri;
 
-    protected $replace = array();
-    protected $subject = array();
+    protected $replace = [];
+    protected $subject = [];
 
     protected $start_time;
 
     private function printError($error,$die = true) {
         if ($this->show_errors) {
-            echo '<div style="color:white;border:1px solid black;background-color:#990000">[vodka rev.'.$this::rev.'] '.$error.'</div>';
+            echo '<div style="color:white;border:1px solid black;background-color:#990000">[vodka v.'.$this::ver.'] '.$error.'</div>';
         }
         if ($die) {
             header($_SERVER['SERVER_PROTOCOL']." 418 I'm a teapot",true,418);
@@ -172,6 +173,9 @@ class vodka {
             if (!isset($page['keywords'])) {
                 $page['keywords'] = "";
             }
+            if (!isset($page['isAJAX'])) {
+                $page['isAJAX'] = false;
+            }
         }
 
         if ($this->auto_pages) {
@@ -184,11 +188,11 @@ class vodka {
                     }
                 }
                 if ($add) {
-                    $this->pages[] = array(
+                    $this->pages[] = [
                         'path' => $file,
                         'title' => $this->_pathinfo($file,PATHINFO_FILENAME),
                         'name' => $this->_pathinfo($file,PATHINFO_FILENAME)
-                    );
+                    ];
                 }
             }
         }
@@ -244,7 +248,7 @@ class vodka {
                 unset($_GET[$key]);
                 $key = explode('?',$key);
                 if (isset($key[1])) {
-                    $_GET = array($key[1] => $value) + $_GET;
+                    $_GET = [$key[1] => $value] + $_GET;
                 }
                 break;
             }
@@ -398,6 +402,28 @@ class vodka {
     }
 
     /**
+    * Get specified page url.
+    *
+    * @param mixed $page Array with page or page name.
+    * @return string $url Canonical URL of the page.
+    */
+    public function getPageURL($page) {
+        if (!is_array($page)) {
+            $page = $this->getPageByName($page);
+            if (!is_array($page)) {
+                $this->printError('page not defined.');
+                return false;
+            }
+        }
+        if (isset($page['name'])) {
+            return $this->base_url.($page['name'] == $this->main_page ? '' : $page['name']);
+        } else {
+            $this->printError('page not defined.');
+            return false;
+        }
+    }
+
+    /**
     * Builds current menu.
     *
     * @return boolean `true` if everything is ok, `false` otherwise.
@@ -479,7 +505,11 @@ class vodka {
                 return false;
             }
         }
-        $this->output = $this->template;
+        if ($page['isAJAX']) {
+            $this->output = $this::content;
+        } else {
+            $this->output = $this->template;
+        }
         if (isset($page['custom'])) {
             $page['custom'] = array_reverse($page['custom']);
             while ($custom = current($page['custom'])) {
@@ -495,8 +525,30 @@ class vodka {
                 next($page['custom']);
             }
         }
-        array_unshift($this->replace,$this::content,$this::head,$this::canonical,$this::description,$this::keywords,$this::template,$this::title,$this::menu,$this::baseurl);
-        array_unshift($this->subject,$this->content,$this->built_head,$this->base_url.($page['name'] == $this->main_page ? '' : $page['name']),$page['description'],$page['keywords'],$this->current_template,$page['title'],$this->built_menu,$this->base_url);
+        array_unshift(
+            $this->replace,
+            $this::content,
+            $this::head,
+            $this::canonical,
+            $this::description,
+            $this::keywords,
+            $this::template,
+            $this::title,
+            $this::menu,
+            $this::baseurl
+        );
+        array_unshift(
+            $this->subject,
+            $this->content,
+            $this->built_head,
+            $this->base_url.($page['name'] == $this->main_page ? '' : $page['name']),
+            $page['description'],
+            $page['keywords'],
+            $this->current_template,
+            $page['title'],
+            $this->built_menu,
+            $this->base_url
+        );
         $this->output = str_replace($this->replace,$this->subject,$this->output);
         if ($this->clean_unused_vars) {
             $this->output = preg_replace('/{[A-Z0-9:]+}/','',$this->output);
@@ -532,7 +584,7 @@ class vodka {
     }
 
     /**
-    * Appends something to the `{VODKA:HEAD}` part of the template.
+    * Appends $string to the `{VODKA:HEAD}` part of the template.
     * 
     * *Please note that this function doesn't modify the output directly, call `buildPage()` to apply your actions.*
     *
