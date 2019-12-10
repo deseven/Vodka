@@ -1,14 +1,14 @@
 <?php
 
 /**
-* @version 1.0.0
+* @version 1.0.1
 * @author deseven
 * @link https://github.com/deseven/vodka
 */
 class vodka {
 
-    const ver = '1.0.0';
-    const rev = 100; // compatibility with older versions
+    const ver = '1.0.1';
+    const rev = 101; // compatibility with older versions
 
     const head        = '{VODKA:HEAD}';
     const canonical   = '{VODKA:CANONICAL}';
@@ -57,7 +57,12 @@ class vodka {
 
     private function printError($error,$die = true) {
         if ($this->show_errors) {
-            echo '<div style="color:white;border:1px solid black;background-color:#990000">[vodka v.'.$this::ver.'] '.$error.'</div>';
+            $trace = array_reverse(debug_backtrace());
+            echo '<div style="color:white;border:1px solid black;background-color:#990000">[vodka '.$this::ver.'] ERROR - '.$error.'<br>';
+            foreach ($trace as $tritem) {
+                echo $tritem['file'].':'.$tritem['line'].'<br>';
+            }
+            echo '</div>';
         }
         if ($die) {
             header($_SERVER['SERVER_PROTOCOL']." 418 I'm a teapot",true,418);
@@ -405,22 +410,17 @@ class vodka {
     * Get specified page url.
     *
     * @param mixed $page Array with page or page name.
-    * @return string $url Canonical URL of the page.
+    * @return mixed `string` with canonical URL of the page or `false`.
     */
     public function getPageURL($page) {
         if (!is_array($page)) {
             $page = $this->getPageByName($page);
             if (!is_array($page)) {
-                $this->printError('page not defined.');
+                $this->printError('page not defined.',false);
                 return false;
             }
         }
-        if (isset($page['name'])) {
-            return $this->base_url.($page['name'] == $this->main_page ? '' : $page['name']);
-        } else {
-            $this->printError('page not defined.');
-            return false;
-        }
+        return $this->base_url.($page['name'] == $this->main_page ? '' : $page['name']);
     }
 
     /**
