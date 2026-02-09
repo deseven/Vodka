@@ -1,14 +1,19 @@
 <?php
 
 /**
-* @version 1.0.1
+* @version 1.0.2
 * @author deseven
 * @link https://github.com/deseven/vodka
 */
+
+if (version_compare(PHP_VERSION, '7.4.0', '<')) {
+    die('Vodka requires PHP 7.4 or higher. Current version: ' . PHP_VERSION);
+}
+
 class vodka {
 
-    const ver = '1.0.1';
-    const rev = 101; // compatibility with older versions
+    const ver = '1.0.2';
+    const rev = 102; // compatibility with older versions
 
     const head        = '{VODKA:HEAD}';
     const canonical   = '{VODKA:CANONICAL}';
@@ -55,17 +60,28 @@ class vodka {
 
     protected $start_time;
 
-    private function printError($error,$die = true) {
+    private function printError($error, $die = true) {
+        // Always log errors regardless of show_errors setting
+        $trace = array_reverse(debug_backtrace());
+        error_log('[vodka '.$this::ver.'] ERROR - '.$error);
+        foreach ($trace as $tritem) {
+            if (isset($tritem['file']) && isset($tritem['line'])) {
+                error_log($tritem['file'].':'.$tritem['line']);
+            }
+        }
+        
         if ($this->show_errors) {
-            $trace = array_reverse(debug_backtrace());
             echo '<div style="color:white;border:1px solid black;background-color:#990000">[vodka '.$this::ver.'] ERROR - '.$error.'<br>';
             foreach ($trace as $tritem) {
-                echo $tritem['file'].':'.$tritem['line'].'<br>';
+                if (isset($tritem['file']) && isset($tritem['line'])) {
+                    echo $tritem['file'].':'.$tritem['line'].'<br>';
+                }
             }
             echo '</div>';
         }
+        
         if ($die) {
-            header($_SERVER['SERVER_PROTOCOL']." 418 I'm a teapot",true,418);
+            header($_SERVER['SERVER_PROTOCOL'].' 500 Internal Server Error', true, 500);
             exit;
         }
     }
@@ -117,10 +133,14 @@ class vodka {
         if (isset($params['system']['clean_unused_vars'])) {
             $this->clean_unused_vars = $params['system']['clean_unused_vars'];
         }
+
+        error_reporting(E_ALL);        
         if ($this->show_errors == true) {
-            error_reporting(E_ERROR|E_WARNING|E_PARSE); 
+            ini_set('display_errors', '1');
+            ini_set('log_errors', '1');
         } else {
-            error_reporting(0);
+            ini_set('display_errors', '0');
+            ini_set('log_errors', '1');
         }
 
         if (isset($params['system']['root'])) {
@@ -167,7 +187,7 @@ class vodka {
                 return false;
             }
             if (!isset($page['name'])) {
-                $page['name'] = $this->_pathinfo($page['path'],PATHINFO_FILENAME);
+                $page['name'] = $this->_pathinfo($page['path'] ?? '',PATHINFO_FILENAME);
             }
             if (!isset($page['title'])) {
                 $page['title'] = $page['name'];
@@ -204,47 +224,54 @@ class vodka {
 
         $this->templates = $params['templates'];
 
-        $this->uri = urldecode($_SERVER['REQUEST_URI']);
-        $pos = strpos($this->uri,basename($_SERVER['PHP_SELF']));
-        if ($pos !== false) {
-            $this->uri = substr_replace($this->uri,'',$pos,strlen(basename($_SERVER['PHP_SELF'])));
+        $this->uri = $_SERVER['REQUEST_URI'] ?? '';
+        $php_self = $_SERVER['PHP_SELF'] ?? '';
+        
+        if ($php_self) {
+            $pos = strpos($this->uri, basename($php_self));
+            if ($pos !== false) {
+                $this->uri = substr_replace($this->uri, '', $pos, strlen(basename($php_self)));
+            }
+            $pos = strpos($this->uri, dirname($php_self));
+            if ($pos !== false) {
+                $this->uri = substr_replace($this->uri, '', $pos, strlen(dirname($php_self)));
+            }
         }
-        $pos = strpos($this->uri,dirname($_SERVER['PHP_SELF']));
-        if ($pos !== false) {
-            $this->uri = substr_replace($this->uri,'',$pos,strlen(dirname($_SERVER['PHP_SELF'])));
-        }
-        $this->uri = preg_replace('~/{2,}~','/',$this->uri);
-        $this->uri = ltrim($this->uri,'/');
-        $this->uri = explode('?',$this->uri);
+        
+        $this->uri = preg_replace('~/{2,}~', '/', $this->uri);
+        $this->uri = ltrim($this->uri, '/');
+        $this->uri = explode('?', $this->uri);
         $this->uri = $this->uri[0];
 
-        if ($this->forbid_scriptname) {
-            if (strpos($_SERVER['REQUEST_URI'],$_SERVER['PHP_SELF']) === 0) {
-                $_SERVER['REQUEST_URI'] = str_replace($_SERVER['PHP_SELF'],'',$_SERVER['REQUEST_URI']);
-                $_SERVER['REQUEST_URI'] = preg_replace('~/{2,}~','/',$_SERVER['REQUEST_URI']);
+        if ($this->forbid_scriptname && isset($_SERVER['REQUEST_URI']) && isset($_SERVER['PHP_SELF'])) {
+            if (strpos($_SERVER['REQUEST_URI'], $_SERVER['PHP_SELF']) === 0) {
+                $_SERVER['REQUEST_URI'] = str_replace($_SERVER['PHP_SELF'], '', $_SERVER['REQUEST_URI']);
+                $_SERVER['REQUEST_URI'] = preg_replace('~/{2,}~', '/', $_SERVER['REQUEST_URI']);
                 //echo "will redirect to ".rtrim($this->base_url,'/').$_SERVER['REQUEST_URI'];
-                header('Location: '.rtrim($this->base_url,'/').$_SERVER['REQUEST_URI'],true,301);
+                header('Location: '.rtrim($this->base_url, '/').$_SERVER['REQUEST_URI'], true, 301);
                 exit;
             }
         }
 
         if ($this->main_page) {
-            if ($this->uri == $this->main_page) {
-                $_SERVER['REQUEST_URI'] = str_replace($_SERVER['PHP_SELF'],'',$_SERVER['REQUEST_URI']);
-                $_SERVER['REQUEST_URI'] = preg_replace('~/{2,}~','/',$_SERVER['REQUEST_URI']);
-                $_SERVER['REQUEST_URI'] = str_replace($this->main_page,'',$_SERVER['REQUEST_URI']);
+            if ($this->uri == $this->main_page && isset($_SERVER['REQUEST_URI']) && isset($_SERVER['PHP_SELF'])) {
+                $_SERVER['REQUEST_URI'] = str_replace($_SERVER['PHP_SELF'], '', $_SERVER['REQUEST_URI']);
+                $_SERVER['REQUEST_URI'] = preg_replace('~/{2,}~', '/', $_SERVER['REQUEST_URI']);
+                $_SERVER['REQUEST_URI'] = str_replace($this->main_page, '', $_SERVER['REQUEST_URI']);
                 //echo "will redirect to ".rtrim($this->base_url,'/').$_SERVER['REQUEST_URI'];
-                header('Location: '.rtrim($this->base_url,'/').$_SERVER['REQUEST_URI'],true,301);
+                header('Location: '.rtrim($this->base_url, '/').$_SERVER['REQUEST_URI'], true, 301);
                 exit;
             }
         }
 
         foreach ($this->pages as &$page) {
             if (($page['name'].'/' == $this->uri) || ($page['name'] == $this->uri.'/')) {
-                $_SERVER['REQUEST_URI'] = str_replace($this->uri,$page['name'],urldecode($_SERVER['REQUEST_URI']));
-                //echo "will redirect to ".$_SERVER['REQUEST_URI'];
-                header('Location: '.$_SERVER['REQUEST_URI'],true,301);
-                exit;
+                if (isset($_SERVER['REQUEST_URI'])) {
+                    $_SERVER['REQUEST_URI'] = str_replace($this->uri, $page['name'], $_SERVER['REQUEST_URI']);
+                    //echo "will redirect to ".$_SERVER['REQUEST_URI'];
+                    header('Location: '.$_SERVER['REQUEST_URI'], true, 301);
+                    exit;
+                }
             }
         }
 
@@ -288,11 +315,15 @@ class vodka {
             $this->printError('no such template defined.');
             return false;
         }
-        if (dirname($_SERVER['PHP_SELF']) == '/') {
+        $php_self = $_SERVER['PHP_SELF'] ?? '';
+        if ($php_self && dirname($php_self) == '/') {
             $this->current_template = '/'.$this->templates[$name];
         }
+        else if ($php_self) {
+            $this->current_template = htmlspecialchars(dirname($php_self)).'/'.$this->templates[$name];
+        }
         else {
-            $this->current_template = htmlspecialchars(dirname($_SERVER['PHP_SELF'])).'/'.$this->templates[$name];
+            $this->current_template = $this->templates[$name];
         }
         return true;
     }
@@ -351,7 +382,7 @@ class vodka {
                     }
                 }
             } else {
-                $random_page = rand(0,count($this->pages)-1);
+                $random_page = random_int(0,count($this->pages)-1);
                 $this->current_page = $this->pages[$random_page];
                 return $this->pages[$random_page];
             }
@@ -470,8 +501,9 @@ class vodka {
                 }
                 $cur_item = str_replace($this::name,$this->pages[$i]['name'],$cur_item);
 
-                if (dirname($_SERVER['PHP_SELF']) != '/') {
-                    $cur_item = str_replace($this::url,htmlspecialchars(dirname($_SERVER['PHP_SELF'])).'/'.($this->pages[$i]['name'] == $this->main_page ? '' : $this->pages[$i]['name']),$cur_item);
+                $php_self = $_SERVER['PHP_SELF'] ?? '';
+                if ($php_self && dirname($php_self) != '/') {
+                    $cur_item = str_replace($this::url,htmlspecialchars(dirname($php_self)).'/'.($this->pages[$i]['name'] == $this->main_page ? '' : $this->pages[$i]['name']),$cur_item);
                 } else {
                     $cur_item = str_replace($this::url,'/'.($this->pages[$i]['name'] == $this->main_page ? '' : $this->pages[$i]['name']),$cur_item);
                 }
